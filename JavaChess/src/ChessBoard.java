@@ -14,6 +14,11 @@ public class ChessBoard {
                 pieces.put(new Position(i,j), null);
             }
         }
+
+        if (!startingPieces) {
+            return;
+        }
+
         addPiece(new Rook(Position.at(0,0), this, Piece.PlayerColor.White));
         addPiece(new Knight(Position.at(0,1), this, Piece.PlayerColor.White));
         addPiece(new Bishop(Position.at(0,2), this, Piece.PlayerColor.White));
@@ -29,8 +34,8 @@ public class ChessBoard {
         addPiece(new Rook(Position.at(7,0), this, Piece.PlayerColor.Black));
         addPiece(new Knight(Position.at(7,1), this, Piece.PlayerColor.Black));
         addPiece(new Bishop(Position.at(7,2), this, Piece.PlayerColor.Black));
-        addPiece(new King(Position.at(7,3), this, Piece.PlayerColor.Black));
-        addPiece(new Queen(Position.at(7,4), this, Piece.PlayerColor.Black));
+        addPiece(new Queen(Position.at(7,3), this, Piece.PlayerColor.Black));
+        addPiece(new King(Position.at(7,4), this, Piece.PlayerColor.Black));
         addPiece(new Bishop(Position.at(7,5), this, Piece.PlayerColor.Black));
         addPiece(new Knight(Position.at(7,6), this, Piece.PlayerColor.Black));
         addPiece(new Rook(Position.at(7,7), this, Piece.PlayerColor.Black));
@@ -68,6 +73,9 @@ public class ChessBoard {
             pieces.put(piece.getPosition(), null);
             piece.setPosition(pos);
             pieces.put(piece.getPosition(), piece);
+            if (piece instanceof IFirstMove) {
+                ((IFirstMove) piece).setIsFirstMove(false);
+            }
             updatePieces();
         }
     }
@@ -97,5 +105,33 @@ public class ChessBoard {
             }
             System.out.println();
         }
+        System.out.println();
+    }
+
+    public void printPieceMoves(Piece piece) {
+        for (int i = ROWS - 1; i >= 0; i--) {
+            for (int j = 0; j < COLUMNS; j++) {
+                Position pos = new Position(i,j);
+                if (pieces.get(pos) != null)  {
+                    if (piece.getCaptures().contains(pos)) {
+                        System.out.print("x");
+                    }
+                    else {
+                        System.out.print(pieces.get(pos).getChar());
+                    }
+                }
+                else {
+                    if (piece.getMoves().contains(pos)) {
+                        System.out.print("o");
+                    }
+                    else {
+                        System.out.print("-");
+                    }
+                }
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 }

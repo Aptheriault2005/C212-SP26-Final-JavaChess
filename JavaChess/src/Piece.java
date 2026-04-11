@@ -18,7 +18,7 @@ public abstract class Piece {
         setCaptures(new HashSet<>());
     }
 
-    public void addMovesAndCapturesInLine(int rankOffset, int fileOffset) {
+    protected void addMovesAndCapturesInLine(int rankOffset, int fileOffset) {
         Position acc = position.getAdjacent(rankOffset, fileOffset);
         while (cb.isValidPosition(acc)) {
             if (cb.getPiece(acc) != null)  {
@@ -34,6 +34,28 @@ public abstract class Piece {
         }
     }
 
+    protected void addMovesAndCapturesAtOffset(int rankOffset, int fileOffset) {
+        Position pos = position.getAdjacent(rankOffset, fileOffset);
+        if (cb.isValidPosition(pos)) {
+            if (cb.getPiece(pos) != null)  {
+                if (cb.getPiece(pos).playerColor != this.playerColor) {
+                    captures.add(pos);
+                }
+            }
+            else {
+                moves.add(pos);
+            }
+        }
+    }
+
+    protected ChessBoard getCb() {
+        return cb;
+    }
+
+    public PlayerColor getPlayerColor() {
+        return playerColor;
+    }
+
     public boolean isValidMove(Position newPos) {
         return this.getMoves().contains(newPos);
     }
@@ -43,7 +65,7 @@ public abstract class Piece {
     }
 
     public char getChar() {
-        return 'X';
+        return '?';
     }
 
     public abstract void update();
