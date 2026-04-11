@@ -8,12 +8,41 @@ public class ChessBoard {
 
     private Map<Position, Piece> pieces = new HashMap<>();
 
-    public ChessBoard() {
+    public ChessBoard(boolean startingPieces) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 pieces.put(new Position(i,j), null);
             }
         }
+        addPiece(new Rook(Position.at(0,0), this, Piece.PlayerColor.White));
+        addPiece(new Knight(Position.at(0,1), this, Piece.PlayerColor.White));
+        addPiece(new Bishop(Position.at(0,2), this, Piece.PlayerColor.White));
+        addPiece(new Queen(Position.at(0,3), this, Piece.PlayerColor.White));
+        addPiece(new King(Position.at(0,4), this, Piece.PlayerColor.White));
+        addPiece(new Bishop(Position.at(0,5), this, Piece.PlayerColor.White));
+        addPiece(new Knight(Position.at(0,6), this, Piece.PlayerColor.White));
+        addPiece(new Rook(Position.at(0,7), this, Piece.PlayerColor.White));
+        for (int i = 0; i < ROWS; i++) {
+            addPiece(new Pawn(Position.at(1, i), this, Piece.PlayerColor.White));
+        }
+
+        addPiece(new Rook(Position.at(7,0), this, Piece.PlayerColor.Black));
+        addPiece(new Knight(Position.at(7,1), this, Piece.PlayerColor.Black));
+        addPiece(new Bishop(Position.at(7,2), this, Piece.PlayerColor.Black));
+        addPiece(new King(Position.at(7,3), this, Piece.PlayerColor.Black));
+        addPiece(new Queen(Position.at(7,4), this, Piece.PlayerColor.Black));
+        addPiece(new Bishop(Position.at(7,5), this, Piece.PlayerColor.Black));
+        addPiece(new Knight(Position.at(7,6), this, Piece.PlayerColor.Black));
+        addPiece(new Rook(Position.at(7,7), this, Piece.PlayerColor.Black));
+        for (int i = 0; i < ROWS; i++) {
+            addPiece(new Pawn(Position.at(6, i), this, Piece.PlayerColor.Black));
+        }
+
+        updatePieces();
+    }
+
+    public ChessBoard() {
+        this(false);
     }
 
     public void updatePieces() {
