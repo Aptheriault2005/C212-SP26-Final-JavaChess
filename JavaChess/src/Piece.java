@@ -21,8 +21,8 @@ public abstract class Piece {
     protected void addMovesAndCapturesInLine(int rankOffset, int fileOffset) {
         Position acc = position.getAdjacent(rankOffset, fileOffset);
         while (cb.isValidPosition(acc)) {
-            if (cb.getPiece(acc) != null)  {
-                if (cb.getPiece(acc).playerColor != this.playerColor) {
+            if (cb.getPieceAt(acc) != null)  {
+                if (cb.getPieceAt(acc).playerColor != this.playerColor) {
                     captures.add(acc);
                 }
                 break;
@@ -37,8 +37,8 @@ public abstract class Piece {
     protected void addMovesAndCapturesAtOffset(int rankOffset, int fileOffset) {
         Position pos = position.getAdjacent(rankOffset, fileOffset);
         if (cb.isValidPosition(pos)) {
-            if (cb.getPiece(pos) != null)  {
-                if (cb.getPiece(pos).playerColor != this.playerColor) {
+            if (cb.getPieceAt(pos) != null)  {
+                if (cb.getPieceAt(pos).playerColor != this.playerColor) {
                     captures.add(pos);
                 }
             }

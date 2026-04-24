@@ -32,13 +32,13 @@ public class Pawn extends Piece implements IFirstMove{
     private void addPawnMoves() {
         HashSet<Position> pawnMoves = new HashSet<>();
         Position pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1,0) : getPosition().getAdjacent(-1,0);
-        if (getCb().isValidPosition(pos) && getCb().getPiece(pos) == null) {
+        if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) == null) {
             pawnMoves.add(pos);
         }
 
         if (getIsFirstMove()) {
             pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(2,0) : getPosition().getAdjacent(-2,0);
-            if (getCb().isValidPosition(pos) && getCb().getPiece(pos) == null) {
+            if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) == null) {
                 pawnMoves.add(pos);
             }
         }
@@ -48,12 +48,12 @@ public class Pawn extends Piece implements IFirstMove{
 
     private void addPawnCaptures() {
         HashSet<Position> pawnCaptures = new HashSet<>();
-        Position pos = getPosition().getAdjacent(1, 1);
-        if (getCb().isValidPosition(pos) && getCb().getPiece(pos) != null && getCb().getPiece(pos).getPlayerColor() != this.getPlayerColor()) {
+        Position pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1, 1) : getPosition().getAdjacent(-1, 1);
+        if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) != null && getCb().getPieceAt(pos).getPlayerColor() != this.getPlayerColor()) {
             pawnCaptures.add(pos);
         }
-        pos = getPosition().getAdjacent(1, -1);
-        if (getCb().isValidPosition(pos) && getCb().getPiece(pos) != null && getCb().getPiece(pos).getPlayerColor() != this.getPlayerColor()) {
+        pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1, -1) : getPosition().getAdjacent(-1, -1);
+        if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) != null && getCb().getPieceAt(pos).getPlayerColor() != this.getPlayerColor()) {
             pawnCaptures.add(pos);
         }
 
