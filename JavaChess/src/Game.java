@@ -9,6 +9,10 @@ public class Game {
         cb = new ChessBoard(true);
     }
 
+    public Game(boolean isEmpty) {
+        cb = new ChessBoard(!isEmpty);
+    }
+
     public Piece.PlayerColor getCurrentPlayer() {
         if (turn % 2 == 0) {
             return Piece.PlayerColor.White;
@@ -26,22 +30,6 @@ public class Game {
         if (pieceToMove.getPlayerColor() == getCurrentPlayer() && cb.movePiece(pieceToMove, targetPosition)) {
             turn++;
             return true;
-        }
-        return false;
-    }
-
-    public boolean isKingCheckmated(Piece.PlayerColor player) {
-        return true;
-    }
-
-    public boolean isKingInCheck(Piece.PlayerColor player) {
-        King king = cb.getKing(player);
-        for (Piece piece : cb.getPieceList()) {
-            if (piece.getPlayerColor() != player) {
-                if (piece.getCaptures().contains(king.getPosition())) {
-                    return true;
-                }
-            }
         }
         return false;
     }

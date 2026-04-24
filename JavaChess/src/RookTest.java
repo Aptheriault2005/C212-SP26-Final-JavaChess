@@ -33,4 +33,20 @@ class RookTest {
         assertTrue(rookB1.getCaptures().contains(rookW2.getPosition()));
     }
 
+    @Test
+    void rookAttacksPositions() {
+        ChessBoard cb = new ChessBoard();
+        Piece rookW1 = new Rook(new Position(0,0), cb, Piece.PlayerColor.White);
+        Piece rookW2 = new Rook(new Position(0,1), cb, Piece.PlayerColor.White);
+        Piece rookB1 = new Rook(new Position(7,0), cb, Piece.PlayerColor.Black);
+        cb.addPiece(rookW1);
+        cb.addPiece(rookW2);
+        cb.addPiece(rookB1);
+        cb.updatePieces();
+
+        cb.printBoard();
+        assertTrue(cb.isPositionAttacked(rookB1.getPosition(), rookB1.getPlayerColor()));
+        assertTrue(cb.isPositionAttacked(Position.at(6,0), Piece.PlayerColor.Black));
+    }
+
 }

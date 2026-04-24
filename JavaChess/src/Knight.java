@@ -7,7 +7,7 @@ public class Knight extends Piece{
 
     @Override
     public char getChar() {
-        return 'H';
+        return 'N';
     }
 
     @Override

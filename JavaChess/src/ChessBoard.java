@@ -56,10 +56,8 @@ public class ChessBoard {
     }
 
     public void updatePieces() {
-        for (Piece p : pieceMap.values()) {
-            if (p != null) {
-                p.update();
-            }
+        for (Piece p : pieceList) {
+            p.update();
         }
     }
 
@@ -93,6 +91,15 @@ public class ChessBoard {
             }
             updatePieces();
             return true;
+        }
+        return false;
+    }
+
+    public boolean isPositionAttacked(Position pos, Piece.PlayerColor defenderColor) {
+        for (Piece piece : pieceList) {
+            if (piece.getPlayerColor() != defenderColor && (piece.getMoves().contains(pos) || piece.getCaptures().contains(pos))) {
+                return true;
+            }
         }
         return false;
     }
