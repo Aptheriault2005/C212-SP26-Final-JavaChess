@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ChessBoardTest {
 
     @Test
-    void addPiece() {
+    void addNewPiece() {
         ChessBoard cb = new ChessBoard(true);
         cb.printBoard();
     }

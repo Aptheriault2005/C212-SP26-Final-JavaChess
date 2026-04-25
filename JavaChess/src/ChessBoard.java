@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ChessBoard {
 
@@ -24,28 +21,28 @@ public class ChessBoard {
             return;
         }
 
-        addPiece(new Rook(Position.at(0,0), this, Piece.PlayerColor.White));
-        addPiece(new Knight(Position.at(0,1), this, Piece.PlayerColor.White));
-        addPiece(new Bishop(Position.at(0,2), this, Piece.PlayerColor.White));
-        addPiece(new Queen(Position.at(0,3), this, Piece.PlayerColor.White));
-        addPiece(new King(Position.at(0,4), this, Piece.PlayerColor.White));
-        addPiece(new Bishop(Position.at(0,5), this, Piece.PlayerColor.White));
-        addPiece(new Knight(Position.at(0,6), this, Piece.PlayerColor.White));
-        addPiece(new Rook(Position.at(0,7), this, Piece.PlayerColor.White));
+        addNewPiece(new Rook(Position.at(0,0), this, Piece.PlayerColor.White));
+        addNewPiece(new Knight(Position.at(0,1), this, Piece.PlayerColor.White));
+        addNewPiece(new Bishop(Position.at(0,2), this, Piece.PlayerColor.White));
+        addNewPiece(new Queen(Position.at(0,3), this, Piece.PlayerColor.White));
+        addNewPiece(new King(Position.at(0,4), this, Piece.PlayerColor.White));
+        addNewPiece(new Bishop(Position.at(0,5), this, Piece.PlayerColor.White));
+        addNewPiece(new Knight(Position.at(0,6), this, Piece.PlayerColor.White));
+        addNewPiece(new Rook(Position.at(0,7), this, Piece.PlayerColor.White));
         for (int i = 0; i < ROWS; i++) {
-            addPiece(new Pawn(Position.at(1, i), this, Piece.PlayerColor.White));
+            addNewPiece(new Pawn(Position.at(1, i), this, Piece.PlayerColor.White));
         }
 
-        addPiece(new Rook(Position.at(7,0), this, Piece.PlayerColor.Black));
-        addPiece(new Knight(Position.at(7,1), this, Piece.PlayerColor.Black));
-        addPiece(new Bishop(Position.at(7,2), this, Piece.PlayerColor.Black));
-        addPiece(new Queen(Position.at(7,3), this, Piece.PlayerColor.Black));
-        addPiece(new King(Position.at(7,4), this, Piece.PlayerColor.Black));
-        addPiece(new Bishop(Position.at(7,5), this, Piece.PlayerColor.Black));
-        addPiece(new Knight(Position.at(7,6), this, Piece.PlayerColor.Black));
-        addPiece(new Rook(Position.at(7,7), this, Piece.PlayerColor.Black));
+        addNewPiece(new Rook(Position.at(7,0), this, Piece.PlayerColor.Black));
+        addNewPiece(new Knight(Position.at(7,1), this, Piece.PlayerColor.Black));
+        addNewPiece(new Bishop(Position.at(7,2), this, Piece.PlayerColor.Black));
+        addNewPiece(new Queen(Position.at(7,3), this, Piece.PlayerColor.Black));
+        addNewPiece(new King(Position.at(7,4), this, Piece.PlayerColor.Black));
+        addNewPiece(new Bishop(Position.at(7,5), this, Piece.PlayerColor.Black));
+        addNewPiece(new Knight(Position.at(7,6), this, Piece.PlayerColor.Black));
+        addNewPiece(new Rook(Position.at(7,7), this, Piece.PlayerColor.Black));
         for (int i = 0; i < ROWS; i++) {
-            addPiece(new Pawn(Position.at(6, i), this, Piece.PlayerColor.Black));
+            addNewPiece(new Pawn(Position.at(6, i), this, Piece.PlayerColor.Black));
         }
 
         updatePieces();
@@ -55,13 +52,27 @@ public class ChessBoard {
         this(false);
     }
 
+    public void updatePieces(Piece.PlayerColor player, HashSet<Piece> excluded) {
+        for (Piece p : pieceList) {
+            if (p.getPlayerColor() == player && !excluded.contains(p)) {
+                p.update();
+            }
+        }
+    }
+
     public void updatePieces() {
         for (Piece p : pieceList) {
             p.update();
         }
+        if (whiteKing != null) {
+            whiteKing.update();
+        }
+        if (blackKing != null) {
+            blackKing.update();
+        }
     }
 
-    public void addPiece(Piece piece) {
+    public void addNewPiece(Piece piece) {
         pieceMap.put(piece.getPosition(), piece);
         pieceList.add(piece);
         if (piece instanceof King) {
@@ -93,6 +104,14 @@ public class ChessBoard {
             return true;
         }
         return false;
+    }
+
+    public void removePieceFromBoard(Piece piece) {
+        pieceMap.put(piece.getPosition(), null);
+    }
+
+    public void addPieceToBoard(Piece piece) {
+        pieceMap.put(piece.getPosition(), piece);
     }
 
     public boolean isPositionAttacked(Position pos, Piece.PlayerColor defenderColor) {

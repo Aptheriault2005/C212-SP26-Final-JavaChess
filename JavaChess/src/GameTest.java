@@ -55,10 +55,11 @@ class GameTest {
         assertEquals(10, testGame.getChessBoard().getPieceAt(new Position(4, 7)).getMoves().size());
         assertEquals(3, testGame.getChessBoard().getPieceAt(new Position(4, 7)).getCaptures().size());
         assertTrue(testGame.makeMove(testGame.getChessBoard().getPieceAt(new Position(4, 7)), new Position(6, 5)));
+
+        testGame.getChessBoard().printBoard();
+
         King blackKing = testGame.getChessBoard().getKing(Piece.PlayerColor.Black);
         assertTrue(blackKing.isInCheck());
         assertTrue(blackKing.isCheckmated());
-
-        testGame.getChessBoard().printBoard();
     }
 }

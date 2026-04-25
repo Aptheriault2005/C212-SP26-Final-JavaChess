@@ -11,10 +11,10 @@ class BishopTest {
         Piece bishopW2 = new Bishop(new Position(0,5), cb, Piece.PlayerColor.White);
         Piece bishopB2 = new Bishop(new Position(7,2), cb, Piece.PlayerColor.Black);
         Piece bishopB1 = new Bishop(new Position(7,5), cb, Piece.PlayerColor.Black);
-        cb.addPiece(bishopW1);
-        cb.addPiece(bishopW2);
-        cb.addPiece(bishopB1);
-        cb.addPiece(bishopB2);
+        cb.addNewPiece(bishopW1);
+        cb.addNewPiece(bishopW2);
+        cb.addNewPiece(bishopB1);
+        cb.addNewPiece(bishopB2);
         cb.updatePieces();
 
         assertEquals(7, bishopW1.getMoves().size());

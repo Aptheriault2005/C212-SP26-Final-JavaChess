@@ -10,9 +10,9 @@ class RookTest {
         Piece rookW1 = new Rook(new Position(0,0), cb, Piece.PlayerColor.White);
         Piece rookW2 = new Rook(new Position(0,1), cb, Piece.PlayerColor.White);
         Piece rookB1 = new Rook(new Position(7,0), cb, Piece.PlayerColor.Black);
-        cb.addPiece(rookW1);
-        cb.addPiece(rookW2);
-        cb.addPiece(rookB1);
+        cb.addNewPiece(rookW1);
+        cb.addNewPiece(rookW2);
+        cb.addNewPiece(rookB1);
         cb.updatePieces();
 
         assertEquals(6, rookW1.getMoves().size());
@@ -39,9 +39,9 @@ class RookTest {
         Piece rookW1 = new Rook(new Position(0,0), cb, Piece.PlayerColor.White);
         Piece rookW2 = new Rook(new Position(0,1), cb, Piece.PlayerColor.White);
         Piece rookB1 = new Rook(new Position(7,0), cb, Piece.PlayerColor.Black);
-        cb.addPiece(rookW1);
-        cb.addPiece(rookW2);
-        cb.addPiece(rookB1);
+        cb.addNewPiece(rookW1);
+        cb.addNewPiece(rookW2);
+        cb.addNewPiece(rookB1);
         cb.updatePieces();
 
         cb.printBoard();
