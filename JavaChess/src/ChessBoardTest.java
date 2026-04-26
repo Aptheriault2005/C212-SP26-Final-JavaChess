@@ -29,4 +29,50 @@ class ChessBoardTest {
         assertTrue(cb.isPositionAttacked(Position.at(3,4), Piece.PlayerColor.White));
         assertTrue(cb.isPositionAttacked(Position.at(4,3), Piece.PlayerColor.Black));
     }
+
+    @Test
+    void isPieceDefended() {
+        ChessBoard cb = new ChessBoard(true);
+        cb.printBoard();
+
+        // all pieces and pawns are defended at start except for rooks
+        for (Piece p : cb.getPieceList()) {
+            if (p instanceof Rook) {
+                assertFalse(p.isDefended());
+            }
+            else {
+                assertTrue(p.isDefended());
+            }
+        }
+    }
+
+    @Test
+    void isPieceRemovedOnCapture() {
+        ChessBoard cb = new ChessBoard();
+        Piece knightW1 = new Knight(new Position(1,2), cb, Piece.PlayerColor.White);
+        Piece bishopB1 = new Bishop(new Position(6,4), cb, Piece.PlayerColor.Black);
+        Piece rookB1 = new Rook(new Position(0,0), cb, Piece.PlayerColor.Black);
+        Piece rookB2 = new Rook(new Position(7,0), cb, Piece.PlayerColor.Black);
+        Piece pawnW1 = new Pawn(Position.at(5,5), cb, Piece.PlayerColor.White);
+        cb.addNewPiece(rookB1);
+        cb.addNewPiece(rookB2);
+        cb.addNewPiece(knightW1);
+        cb.addNewPiece(bishopB1);
+        cb.addNewPiece(pawnW1);
+        cb.updatePieces();
+
+        assertEquals(5, cb.getPieceList().size());
+
+        assertTrue(cb.movePiece(pawnW1, bishopB1.getPosition()));
+        assertEquals(4, cb.getPieceList().size());
+        assertFalse(cb.getPieceList().contains(bishopB1));
+
+        assertTrue(cb.movePiece(knightW1, rookB1.getPosition()));
+        assertEquals(3, cb.getPieceList().size());
+        assertFalse(cb.getPieceList().contains(rookB1));
+
+        assertTrue(cb.movePiece(rookB2, knightW1.getPosition()));
+        assertEquals(2, cb.getPieceList().size());
+        assertFalse(cb.getPieceList().contains(knightW1));
+    }
 }

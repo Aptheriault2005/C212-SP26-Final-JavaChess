@@ -19,5 +19,6 @@ public class Bishop extends Piece{
         this.addMovesAndCapturesInLine(1,-1);
         this.addMovesAndCapturesInLine(-1,1);
         this.addMovesAndCapturesInLine(-1,-1);
+        removeIllegalMovesIfInCheck();
     }
 }

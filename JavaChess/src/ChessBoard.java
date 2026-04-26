@@ -53,7 +53,8 @@ public class ChessBoard {
     }
 
     public void updatePieces(Piece.PlayerColor player, HashSet<Piece> excluded) {
-        for (Piece p : pieceList) {
+        final List<Piece> finalPieceList = List.copyOf(pieceList);
+        for (Piece p : finalPieceList) {
             if (p.getPlayerColor() == player && !excluded.contains(p)) {
                 p.update();
             }
@@ -61,9 +62,18 @@ public class ChessBoard {
     }
 
     public void updatePieces() {
-        for (Piece p : pieceList) {
+        if (whiteKing != null) {
+            whiteKing.isInCheck();
+        }
+        if (blackKing != null) {
+            blackKing.isInCheck();
+        }
+
+        final List<Piece> finalPieceList = List.copyOf(pieceList);
+        for (Piece p : finalPieceList) {
             p.update();
         }
+
         if (whiteKing != null) {
             whiteKing.update();
         }
@@ -85,9 +95,15 @@ public class ChessBoard {
         }
     }
 
+    public void capturePiece(Piece piece) {
+        removePieceFromBoard(piece);
+        pieceList.remove(piece);
+    }
+
     public boolean movePiece(Piece piece, Position pos) {
         if (piece.isValidCapture(pos)) {
             pieceMap.put(piece.getPosition(), null);
+            capturePiece(getPieceAt(pos));
             piece.setPosition(pos);
             pieceMap.put(piece.getPosition(), piece);
             updatePieces();
@@ -121,6 +137,29 @@ public class ChessBoard {
             }
         }
         return false;
+    }
+
+    public boolean moveBlocksCheck(Position pos, Piece.PlayerColor player) {
+        King king = getKing(player);
+        if (king.getPiecesCheckingKing().isEmpty() || getPieceAt(pos) != null) return false;
+
+        Piece pieceCheckingKing = king.getPiecesCheckingKing().getFirst();
+        Piece testPiece = new Piece(pos, this, player) {
+            @Override
+            public void update() {}
+        };
+
+        addNewPiece(testPiece);
+        pieceCheckingKing.update();
+
+        if (pieceCheckingKing.getCaptures().contains(king.getPosition())) {
+            capturePiece(testPiece);
+            return false;
+        }
+        else {
+            capturePiece(testPiece);
+            return true;
+        }
     }
 
     public King getKing(Piece.PlayerColor player) {

@@ -1,11 +1,15 @@
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class King extends Piece implements IFirstMove {
 
     private boolean firstMove = true;
+    private final List<Piece> piecesCheckingKing;
 
     public King(Position pos, ChessBoard chessBoard, PlayerColor player) {
         super(pos, chessBoard, player);
+        piecesCheckingKing = new ArrayList<>();
     }
 
     @Override
@@ -64,6 +68,7 @@ public class King extends Piece implements IFirstMove {
     private void addKingCaptures() {
         HashSet<Position> possibleKingCaptures = new HashSet<>();
         HashSet<Position> validKingCaptures = new HashSet<>();
+        HashSet<Piece> kingDefending = new HashSet<>();
 
         possibleKingCaptures.add(getPosition().getAdjacent(1, 1));
         possibleKingCaptures.add(getPosition().getAdjacent(1, 0));
@@ -75,17 +80,22 @@ public class King extends Piece implements IFirstMove {
         possibleKingCaptures.add(getPosition().getAdjacent(-1, -1));
 
         for (Position pos : possibleKingCaptures) {
-            if (
-                    getCb().isValidPosition(pos) &&
-                    getCb().getPieceAt(pos) != null &&
-                    getCb().getPieceAt(pos).getPlayerColor() != getPlayerColor() &&
-                    !getCb().isPositionAttacked(pos, getPlayerColor())
-            ) {
+            if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) != null) {
+                if (
+                        getCb().getPieceAt(pos).getPlayerColor() != getPlayerColor() &&
+                        !getCb().isPositionAttacked(pos, getPlayerColor()) &&
+                        !getCb().getPieceAt(pos).isDefended()
+                ) {
                     validKingCaptures.add(pos);
+                }
+                else {
+                    kingDefending.add(getCb().getPieceAt(pos));
+                }
             }
         }
 
         setCaptures(validKingCaptures);
+        setDefending(kingDefending);
     }
 
     private void removeKingAndUpdate() {
@@ -119,20 +129,49 @@ public class King extends Piece implements IFirstMove {
             return false;
         }
 
-//        HashSet<Position> kingMoves = getMoves();
-//        HashSet<Piece> piecesCheckingKingSet = new HashSet<>();
+        List<Piece> piecesCheckingKingList = new ArrayList<>();
+        for (Piece p : getCb().getPieceList()) {
+            if (p.getCaptures().contains(getPosition())) {
+                piecesCheckingKingList.add(p);
+            }
+        }
+
+        Piece checkingPiece;
+        if (piecesCheckingKingList.size() > 1) {
+            return true;
+        }
+        else {
+            checkingPiece = piecesCheckingKingList.getFirst();
+        }
+
+        for (Piece p : getCb().getPieceList()) {
+            if (p.getPlayerColor() == getPlayerColor()) {
+//                if (p.getCaptures().contains(checkingPiece.getPosition())) {
+//                    return false;
+//                }
+                if (!p.getCaptures().isEmpty() || !p.getMoves().isEmpty()) {
+                    return false;
+                }
+            }
+        }
 
         return true;
     }
 
     public boolean isInCheck() {
-        for (Piece piece : getCb().getPieceList()) {
-            if (piece.getPlayerColor() != getPlayerColor()) {
-                if (piece.getCaptures().contains(getPosition())) {
-                    return true;
+        piecesCheckingKing.clear();
+
+        for (Piece p : getCb().getPieceList()) {
+            if (p.getPlayerColor() != getPlayerColor()) {
+                if (p.getCaptures().contains(getPosition())) {
+                    piecesCheckingKing.add(p);
                 }
             }
         }
-        return false;
+        return !piecesCheckingKing.isEmpty();
+    }
+
+    public List<Piece> getPiecesCheckingKing() {
+        return piecesCheckingKing;
     }
 }

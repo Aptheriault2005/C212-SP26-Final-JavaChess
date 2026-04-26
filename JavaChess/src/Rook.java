@@ -19,5 +19,6 @@ public class Rook extends Piece {
         this.addMovesAndCapturesInLine(0,-1);
         this.addMovesAndCapturesInLine(1,0);
         this.addMovesAndCapturesInLine(-1,0);
+        removeIllegalMovesIfInCheck();
     }
 }

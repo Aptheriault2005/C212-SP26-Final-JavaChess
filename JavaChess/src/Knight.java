@@ -22,5 +22,6 @@ public class Knight extends Piece{
         this.addMovesAndCapturesAtOffset(2,-1);
         this.addMovesAndCapturesAtOffset(-2,1);
         this.addMovesAndCapturesAtOffset(-2,-1);
+        removeIllegalMovesIfInCheck();
     }
 }
