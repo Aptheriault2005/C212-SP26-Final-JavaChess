@@ -3,11 +3,13 @@ import java.awt.*;
 
 public class PlayerGUI extends JPanel {
 
+    private final Game game;
     private JLabel playerLabel;
     private JButton resignButton;
     private JButton offerDrawButton;
 
     public PlayerGUI(Game game) {
+        this.game = game;
         createPlayerLabel(game);
         createResignButton(game);
         createOfferDrawButton(game);
@@ -23,7 +25,8 @@ public class PlayerGUI extends JPanel {
     }
 
     public void UpdateInfo() {
-
+        playerLabel.setText(game.getCurrentPlayer().toString() + "'s move");
+        playerLabel.setForeground(game.getCurrentPlayer() == Piece.PlayerColor.White ? Color.WHITE : Color.BLACK);
     }
 
     private void createPlayerLabel(Game game) {

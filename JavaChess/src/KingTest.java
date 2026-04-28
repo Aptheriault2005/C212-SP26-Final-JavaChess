@@ -94,6 +94,8 @@ class KingTest {
 
         cb.movePiece(whiteQueen, Position.at(6,6));
         cb.printPieceMoves(blackKing);
+        assertEquals(1, blackKing.getCaptures().size());
+        assertEquals(0, blackKing.getMoves().size());
         assertFalse(blackKing.isCheckmated());
     }
 

@@ -1,15 +1,23 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class GameGUI {
+public class GameGUI implements ActionListener {
+
+    private final Game game;
+    private Piece selectedPiece = null;
+    private final PlayerGUI playerGUI;
+    private final ChessBoardGUI chessBoardGUI;
 
     public GameGUI(Game game) {
+        this.game = game;
         JFrame frame = new JFrame();
 
         JPanel guiPanel = new JPanel();
         guiPanel.setLayout(new BorderLayout());
-        PlayerGUI playerGUI = new PlayerGUI(game);
-        ChessBoardGUI chessBoardGUI = new ChessBoardGUI(game);
+        playerGUI = new PlayerGUI(game);
+        chessBoardGUI = new ChessBoardGUI(game, this);
         guiPanel.add(playerGUI, BorderLayout.NORTH);
         guiPanel.add(chessBoardGUI, BorderLayout.CENTER);
 
@@ -19,7 +27,38 @@ public class GameGUI {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new GameGUI(new Game());
+    public void UpdateGUI() {
+        playerGUI.UpdateInfo();
+        chessBoardGUI.UpdateLayout();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof BoardSquareGUI) {
+            Position selectedPos = ((BoardSquareGUI) e.getSource()).getPosition();
+
+            if (selectedPiece != null) {
+                chessBoardGUI.UpdateLayoutWithSelection(selectedPiece);
+                if (selectedPiece.getMoves().contains(selectedPos) ||
+                        selectedPiece.getCaptures().contains(selectedPos)) {
+                    game.makeMove(selectedPiece, selectedPos);
+                    game.getGameGUI().UpdateGUI();
+                    System.out.println(selectedPiece.getChar() + selectedPos.getChessNotation());
+                    selectedPiece = null;
+                }
+                else {
+                    selectedPiece = game.selectValidPieceAt(selectedPos);
+                    if (selectedPiece != null) {
+                        chessBoardGUI.UpdateLayoutWithSelection(selectedPiece);
+                    }
+                }
+            }
+            else {
+                selectedPiece = game.selectValidPieceAt(selectedPos);
+                if (selectedPiece != null) {
+                    chessBoardGUI.UpdateLayoutWithSelection(selectedPiece);
+                }
+            }
+        }
     }
 }
