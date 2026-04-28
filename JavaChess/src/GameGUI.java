@@ -3,23 +3,29 @@ import java.awt.*;
 
 public class GameGUI {
 
-    public GameGUI() {
+    public GameGUI(Game game) {
         JFrame frame = new JFrame();
-        ChessBoard cb = new ChessBoard(true);
-        ChessBoardGUI panel = new ChessBoardGUI(cb);
+        ChessBoard cb = game.getChessBoard();
+        JPanel guiPanel = new JPanel();
+        guiPanel.setLayout(new BorderLayout());
 
-        cb.movePiece(cb.getPieceAt(Position.at(1,0)), Position.at(3,0));
+        PlayerGUI playerGUI = new PlayerGUI(game);
+        ChessBoardGUI chessBoardGUI = new ChessBoardGUI(cb);
 
-        panel.UpdateLayout();
+        cb.movePiece(cb.getPieceAt(Position.at(1,4)), Position.at(3,4));
+
+        chessBoardGUI.UpdateLayoutWithSelection(cb.getPieceAt(Position.at(6,4)));
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,500);
+        frame.setSize(800,900);
 
-        frame.add(panel);
+        guiPanel.add(playerGUI, BorderLayout.NORTH);
+        guiPanel.add(chessBoardGUI, BorderLayout.CENTER);
+        frame.add(guiPanel);
         frame.setVisible(true);
     }
 
     public static void main(String[] args) {
-        new GameGUI();
+        new GameGUI(new Game());
     }
 }

@@ -195,7 +195,34 @@ public class ChessBoard {
                     boardState[i][j] = pieceMap.get(pos).getChar();
                 }
                 else {
-                    boardState[i][j] = '-';
+                    boardState[i][j] = ' ';
+                }
+            }
+        }
+        return boardState;
+    }
+
+    public char[][] getPieceMovesCharArray(Piece piece) {
+        char[][] boardState = new char[8][8];
+        for (int i = ROWS - 1; i >= 0; i--) {
+            for (int j = 0; j < COLUMNS; j++) {
+                Position pos = new Position(i,j);
+                if (pieceMap.get(pos) != null)  {
+                    if (piece.getCaptures().contains(pos)) {
+                        boardState[i][j] = 'x';
+                    }
+                    else {
+                        boardState[i][j] = pieceMap.get(pos).getChar();
+                    }
+                }
+                else {
+                    if (piece.getMoves().contains(pos)) {
+                        boardState[i][j] = 'o';
+                    }
+                    else {
+                        boardState[i][j] = ' ';
+                    }
+
                 }
             }
         }
