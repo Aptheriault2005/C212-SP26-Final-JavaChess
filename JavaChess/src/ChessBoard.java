@@ -186,6 +186,22 @@ public class ChessBoard {
         return pieceMap.containsKey(position);
     }
 
+    public char[][] getBoardStateCharArray() {
+        char[][] boardState = new char[8][8];
+        for (int i = ROWS - 1; i >= 0; i--) {
+            for (int j = 0; j < COLUMNS; j++) {
+                Position pos = new Position(i,j);
+                if (pieceMap.get(pos) != null)  {
+                    boardState[i][j] = pieceMap.get(pos).getChar();
+                }
+                else {
+                    boardState[i][j] = '-';
+                }
+            }
+        }
+        return boardState;
+    }
+
     public void printBoard() {
         for (int i = ROWS - 1; i >= 0; i--) {
             for (int j = 0; j < COLUMNS; j++) {

@@ -27,7 +27,7 @@ public class Game {
     }
 
     public boolean makeMove(Piece pieceToMove, Position targetPosition) {
-        if (pieceToMove.getPlayerColor() == getCurrentPlayer() && cb.movePiece(pieceToMove, targetPosition)) {
+        if (pieceToMove != null && pieceToMove.getPlayerColor() == getCurrentPlayer() && cb.movePiece(pieceToMove, targetPosition)) {
             turn++;
             return true;
         }
