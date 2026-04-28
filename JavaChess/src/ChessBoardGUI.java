@@ -1,54 +1,61 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ChessBoardGUI extends JPanel {
+public class ChessBoardGUI extends JPanel implements ActionListener {
 
-    private ChessBoard chessBoard;
+    private Game game;
+    private Map<Position, BoardSquareGUI> boardSquares;
 
-    public ChessBoardGUI(ChessBoard cb) {
-        chessBoard = cb;
+    public ChessBoardGUI(Game game) {
+        this.game = game;
+        boardSquares = new HashMap<>();
         setSize(800, 800);
-        UpdateLayout();
-    }
-
-    public void UpdateLayoutWithSelection(Piece selection) {
-        removeAll();
-        char[][] boardState = chessBoard.getPieceMovesCharArray(selection);
+        char[][] boardState = game.getChessBoard().getBoardStateCharArray();
         setLayout(new GridLayout(8,8));
         for (int i = 7; i >= 0; i--) {
             for (int j = 0; j < 8; j++) {
-                add(new BoardSquareGUI(""+boardState[i][j], checkerboardColor(i,j)));
+                BoardSquareGUI boardSquare = new BoardSquareGUI(""+boardState[i][j], this, Position.at(i,j));
+                add(boardSquare);
+                boardSquares.put(Position.at(i,j), boardSquare);
+            }
+        }
+    }
+
+    public void UpdateLayoutWithSelection(Piece selection) {
+        char[][] boardState = game.getChessBoard().getPieceMovesCharArray(selection);
+        for (int i = 7; i >= 0; i--) {
+            for (int j = 0; j < 8; j++) {
+                BoardSquareGUI boardSquare = boardSquares.get(Position.at(i,j));
+                boardSquare.Update(""+boardState[i][j]);
             }
         }
     }
 
     public void UpdateLayout() {
-        removeAll();
-        char[][] boardState = chessBoard.getBoardStateCharArray();
-        setLayout(new GridLayout(8,8));
+        char[][] boardState = game.getChessBoard().getBoardStateCharArray();
         for (int i = 7; i >= 0; i--) {
             for (int j = 0; j < 8; j++) {
-                add(new BoardSquareGUI(""+boardState[i][j], checkerboardColor(i,j)));
+                BoardSquareGUI boardSquare = boardSquares.get(Position.at(i,j));
+                boardSquare.Update(""+boardState[i][j]);
             }
         }
     }
 
-    private Color checkerboardColor(int row, int col) {
-        if (row % 2 == 0) {
-            if (col % 2 == 0) {
-                return Color.GRAY;
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof BoardSquareGUI) {
+            Position selectionPos = ((BoardSquareGUI) e.getSource()).getPosition();
+            if (game.getChessBoard().getPieceAt(selectionPos) != null) {
+                Piece selectedPiece = game.getChessBoard().getPieceAt(selectionPos);
+                UpdateLayoutWithSelection(selectedPiece);
             }
-            else {
-                return Color.WHITE;
-            }
-        }
-        else {
-            if (col % 2 == 0) {
-                return Color.WHITE;
-            }
-            else {
-                return Color.GRAY;
-            }
+
+            System.out.println(selectionPos.getChessNotation());
         }
     }
 }
