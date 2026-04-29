@@ -84,7 +84,30 @@ class PawnTest {
 
         cb.printBoard();
 
+        // Not en pessant, pawn wasn't immediately captured after double move
         assertFalse(dPawnB.isCanBeCapturedEnPessant());
+
+        cb.printBoard();
+    }
+
+    @Test
+    void promotion() {
+        ChessBoard cb = new ChessBoard(false);
+        Pawn ePawnW = new Pawn(Position.at(6,4), cb, Piece.PlayerColor.White);
+        Pawn dPawnB = new Pawn(Position.at(1,3), cb, Piece.PlayerColor.Black);
+        cb.addNewPiece(ePawnW);
+        cb.addNewPiece(dPawnB);
+        cb.updatePieces();
+        cb.printBoard();
+
+        // Default queen promotion
+        assertTrue(cb.movePiece(ePawnW, Position.at(7,4)));
+        assertInstanceOf(Queen.class, cb.getPieceAt(Position.at(7,4)));
+
+        // Under promotion
+        dPawnB.setPromotion(new Knight(Position.at(0,0), cb, dPawnB.getPlayerColor()));
+        assertTrue(cb.movePiece(dPawnB, Position.at(0,3)));
+        assertInstanceOf(Knight.class, cb.getPieceAt(Position.at(0,3)));
 
         cb.printBoard();
     }

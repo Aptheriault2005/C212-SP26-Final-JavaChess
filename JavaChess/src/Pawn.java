@@ -1,13 +1,16 @@
 import java.util.HashSet;
+import java.util.Optional;
 
 public class Pawn extends Piece{
 
     private boolean firstMove = true;
     private boolean canBeCapturedEnPessant = false;
     private boolean enPessantTurnOver = false;
+    private Piece promotion;
 
     public Pawn(Position pos, ChessBoard chessBoard, PlayerColor player) {
         super(pos, chessBoard, player);
+        promotion = new Queen(pos, chessBoard, player);
     }
 
     @Override
@@ -57,6 +60,17 @@ public class Pawn extends Piece{
         if (Math.abs(start.getRank() - end.getRank()) == 2) {
             canBeCapturedEnPessant = true;
         }
+
+        if (getPlayerColor() == PlayerColor.White) {
+            if (end.getRank() == 7) {
+                promote(promotion);
+            }
+        }
+        else {
+            if (end.getRank() == 0) {
+                promote(promotion);
+            }
+        }
     }
 
     @Override
@@ -66,6 +80,26 @@ public class Pawn extends Piece{
         copied.canBeCapturedEnPessant = canBeCapturedEnPessant;
         copied.enPessantTurnOver = enPessantTurnOver;
         return copied;
+    }
+
+    public void promote(Piece piece) {
+        if (piece instanceof Knight
+                || piece instanceof Bishop
+                || piece instanceof Rook
+                || piece instanceof Queen) {
+
+            Position pos = getPosition();
+            getCb().capturePiece(this);
+            piece.setPosition(pos);
+            getCb().addNewPiece(piece);
+        }
+        else {
+            throw new RuntimeException("Invalid type for pawn promotion");
+        }
+    }
+
+    public void setPromotion(Piece piece) {
+        promotion = piece;
     }
 
     private void addPawnMoves() {
