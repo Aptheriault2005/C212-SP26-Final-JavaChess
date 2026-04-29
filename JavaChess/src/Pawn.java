@@ -15,14 +15,13 @@ public class Pawn extends Piece implements IFirstMove{
 
     @Override
     public void update() {
-        getDefending().clear();
+        this.setMoves(new HashSet<>());
+        this.setCaptures(new HashSet<>());
         addPawnMoves();
         addPawnCaptures();
 
         if (!getTryToValidate()) return;
         validateMoves();
-//        removeIllegalMovesIfInCheck();
-//        removeIllegalMovesIfPinned();
     }
 
     @Override
@@ -61,15 +60,11 @@ public class Pawn extends Piece implements IFirstMove{
 
     private void addPawnCaptures() {
         HashSet<Position> pawnCaptures = new HashSet<>();
-        HashSet<Piece> pawnDefending = new HashSet<>();
         Position pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1, 1) : getPosition().getAdjacent(-1, 1);
 
         if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) != null) {
             if (getCb().getPieceAt(pos).getPlayerColor() != this.getPlayerColor()) {
                 pawnCaptures.add(pos);
-            }
-            else {
-                pawnDefending.add(getCb().getPieceAt(pos));
             }
         }
 
@@ -79,12 +74,8 @@ public class Pawn extends Piece implements IFirstMove{
             if (getCb().getPieceAt(pos).getPlayerColor() != this.getPlayerColor()) {
                 pawnCaptures.add(pos);
             }
-            else {
-                pawnDefending.add(getCb().getPieceAt(pos));
-            }
         }
 
         this.setCaptures(pawnCaptures);
-        this.setDefending(pawnDefending);
     }
 }

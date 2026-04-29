@@ -140,57 +140,6 @@ public class ChessBoard {
         pieceMap.put(piece.getPosition(), piece);
     }
 
-//    public boolean isPositionAttacked(Position pos, Piece.PlayerColor defenderColor) {
-//        Piece testPiece = new Piece(pos, this, defenderColor) {
-//            @Override
-//            public void update() {}
-//        };
-//
-//        final List<Piece> finalPieceList = List.copyOf(pieceList);
-//        addNewPiece(testPiece);
-//        for (Piece piece : finalPieceList) {
-//            if (piece.getPlayerColor() != defenderColor && !(piece instanceof King)) {
-//                piece.update();
-//                if (piece.getCaptures().contains(pos)) {
-//                    capturePiece(testPiece);
-//                    piece.update();
-//                    return true;
-//                }
-//            }
-//        }
-//        capturePiece(testPiece);
-//        if (defenderColor == Piece.PlayerColor.White) {
-//            updatePieces(Piece.PlayerColor.Black, blackKing);
-//        }
-//        else {
-//            updatePieces(Piece.PlayerColor.White, whiteKing);
-//        }
-//        return false;
-//    }
-//
-//    public boolean moveBlocksCheck(Position pos, Piece.PlayerColor player) {
-//        King king = getKing(player);
-//        if (king.getPiecesCheckingKing().isEmpty() || getPieceAt(pos) != null) return false;
-//
-//        Piece pieceCheckingKing = king.getPiecesCheckingKing().getFirst();
-//        Piece testPiece = new Piece(pos, this, player) {
-//            @Override
-//            public void update() {}
-//        };
-//
-//        addNewPiece(testPiece);
-//        pieceCheckingKing.update();
-//
-//        if (pieceCheckingKing.getCaptures().contains(king.getPosition())) {
-//            capturePiece(testPiece);
-//            return false;
-//        }
-//        else {
-//            capturePiece(testPiece);
-//            return true;
-//        }
-//    }
-
     public boolean validateMove(Piece piece, Position move) {
         validationBoard = copy();
         validationBoard.setPiecesTryToValidate(false);
@@ -199,54 +148,6 @@ public class ChessBoard {
             return !validationBoard.getKing(piece.getPlayerColor()).isInCheck();
         }
         return true;
-
-//        King king = getKing(piece.getPlayerColor());
-//        Position start = piece.getPosition();
-//        setPiecesTryToValidate(false);
-//
-//        if (piece.getCaptures().contains(move)) {
-//            Piece capturedPiece = getPieceAt(move);
-//            if (movePiece(piece, move)) {
-//                if (king.isInCheck()) {
-//                    piece.setPosition(start);
-//                    addPieceToBoard(capturedPiece);
-//                    pieceList.add(capturedPiece);
-//                    setPiecesTryToValidate(true);
-//                    return false;
-//                }
-//                else {
-//                    piece.setPosition(start);
-//                    addPieceToBoard(capturedPiece);
-//                    pieceList.add(capturedPiece);
-//                    setPiecesTryToValidate(true);
-//                    return true;
-//                }
-//            }
-//            setPiecesTryToValidate(true);
-//            return false;
-//        }
-//        else if (piece.getMoves().contains(move)){
-//            if (movePiece(piece, move)) {
-//                if (king.isInCheck()) {
-//                    piece.setPosition(start);
-//                    pieceMap.put(move, null);
-//                    pieceMap.put(start, piece);
-//                    setPiecesTryToValidate(true);
-//                    return false;
-//                }
-//                else {
-//                    piece.setPosition(start);
-//                    pieceMap.put(move, null);
-//                    pieceMap.put(start, piece);
-//                    setPiecesTryToValidate(true);
-//                    return true;
-//                }
-//            }
-//            setPiecesTryToValidate(true);
-//            return false;
-//        }
-//        setPiecesTryToValidate(true);
-//        return false;
     }
 
     public King getKing(Piece.PlayerColor player) {

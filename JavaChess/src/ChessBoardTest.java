@@ -20,49 +20,6 @@ class ChessBoardTest {
         cb.printBoard();
     }
 
-//    @Test
-//    void isPositionAttacked() {
-//        ChessBoard cb = new ChessBoard(true);
-//        cb.printBoard();
-//
-//        assertTrue(cb.isPositionAttacked(Position.at(2,0), Piece.PlayerColor.Black));
-//        assertTrue(cb.isPositionAttacked(Position.at(5,0), Piece.PlayerColor.White));
-//
-//        //assertFalse(cb.isPositionAttacked(Position.at(1,4), Piece.PlayerColor.White));
-//        //assertFalse(cb.isPositionAttacked(Position.at(6,3), Piece.PlayerColor.Black));
-//
-//        cb.printBoard();
-//
-//        cb.movePiece(cb.getPieceAt(Position.at(1, 4)), Position.at(3,4));
-//        cb.movePiece(cb.getPieceAt(Position.at(6, 3)), Position.at(4,3));
-//
-//        cb.printBoard();
-//
-//        assertTrue(cb.isPositionAttacked(Position.at(3,4), Piece.PlayerColor.White));
-//        assertTrue(cb.isPositionAttacked(Position.at(4,3), Piece.PlayerColor.Black));
-//    }
-
-    @Test
-    void isPieceDefended() {
-        ChessBoard cb = new ChessBoard(true);
-        cb.printBoard();
-
-        // all pieces and pawns are defended at start except for rooks
-        for (Piece p : cb.getPieceList()) {
-            if (p instanceof Rook) {
-                assertFalse(p.isDefended());
-            }
-            else {
-                assertTrue(p.isDefended());
-            }
-        }
-
-        Piece pawnBW = cb.getPieceAt(Position.at(1,1));
-        assertTrue(cb.movePiece(pawnBW, Position.at(3,1)));
-        cb.printBoard();
-        assertFalse(pawnBW.isDefended());
-    }
-
     @Test
     void isPieceRemovedOnCapture() {
         ChessBoard cb = new ChessBoard();

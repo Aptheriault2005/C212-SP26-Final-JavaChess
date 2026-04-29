@@ -12,7 +12,6 @@ public class Knight extends Piece{
 
     @Override
     public void update() {
-        getDefending().clear();
         this.setMoves(new HashSet<>());
         this.setCaptures(new HashSet<>());
         this.addMovesAndCapturesAtOffset(1,2);
@@ -26,8 +25,6 @@ public class Knight extends Piece{
 
         if (!getTryToValidate()) return;
         validateMoves();
-//        removeIllegalMovesIfInCheck();
-//        removeIllegalMovesIfPinned();
     }
 
     @Override

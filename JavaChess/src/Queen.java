@@ -13,7 +13,6 @@ public class Queen extends Piece{
 
     @Override
     public void update() {
-        getDefending().clear();
         this.setMoves(new HashSet<>());
         this.setCaptures(new HashSet<>());
         this.addMovesAndCapturesInLine(1,1);
@@ -27,8 +26,6 @@ public class Queen extends Piece{
 
         if (!getTryToValidate()) return;
         validateMoves();
-//        removeIllegalMovesIfInCheck();
-//        removeIllegalMovesIfPinned();
     }
 
     @Override

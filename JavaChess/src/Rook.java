@@ -13,7 +13,6 @@ public class Rook extends Piece {
 
     @Override
     public void update() {
-        getDefending().clear();
         this.setMoves(new HashSet<>());
         this.setCaptures(new HashSet<>());
         this.addMovesAndCapturesInLine(0,1);
@@ -23,8 +22,6 @@ public class Rook extends Piece {
 
         if (!getTryToValidate()) return;
         validateMoves();
-//        removeIllegalMovesIfInCheck();
-//        removeIllegalMovesIfPinned();
     }
 
     @Override

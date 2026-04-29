@@ -19,12 +19,8 @@ public class King extends Piece implements IFirstMove {
 
     @Override
     public void update() {
-//        getDefending().clear();
-//        this.setMoves(new HashSet<>());
-//        this.setCaptures(new HashSet<>());
-//        addKingMoves();
-//        addKingCaptures();
-
+        this.setMoves(new HashSet<>());
+        this.setCaptures(new HashSet<>());
         addMovesAndCapturesAtOffset(1,1);
         addMovesAndCapturesAtOffset(1,0);
         addMovesAndCapturesAtOffset(1,-1);
@@ -53,89 +49,6 @@ public class King extends Piece implements IFirstMove {
     @Override
     public void setIsFirstMove(boolean firstMove) {
         this.firstMove = firstMove;
-    }
-
-    private void addKingMoves() {
-        HashSet<Position> possibleKingMoves = new HashSet<>();
-        HashSet<Position> validKingMoves = new HashSet<>();
-
-//        removeKingAndUpdate();
-
-        possibleKingMoves.add(getPosition().getAdjacent(1, 1));
-        possibleKingMoves.add(getPosition().getAdjacent(1, 0));
-        possibleKingMoves.add(getPosition().getAdjacent(1, -1));
-        possibleKingMoves.add(getPosition().getAdjacent(0, 1));
-        possibleKingMoves.add(getPosition().getAdjacent(0, -1));
-        possibleKingMoves.add(getPosition().getAdjacent(-1, 1));
-        possibleKingMoves.add(getPosition().getAdjacent(-1, 0));
-        possibleKingMoves.add(getPosition().getAdjacent(-1, -1));
-
-        for (Position pos : possibleKingMoves) {
-            if (
-                    getCb().isValidPosition(pos) &&
-                    getCb().getPieceAt(pos) == null //&&
-                    //!getCb().isPositionAttacked(pos, this.getPlayerColor())
-            ) {
-                validKingMoves.add(pos);
-            }
-        }
-//
-//        addKingAndUpdate();
-
-        this.setMoves(validKingMoves);
-    }
-
-    private void addKingCaptures() {
-        HashSet<Position> possibleKingCaptures = new HashSet<>();
-        HashSet<Position> validKingCaptures = new HashSet<>();
-        HashSet<Piece> kingDefending = new HashSet<>();
-
-//        possibleKingCaptures.add(getPosition().getAdjacent(1, 1));
-//        possibleKingCaptures.add(getPosition().getAdjacent(1, 0));
-//        possibleKingCaptures.add(getPosition().getAdjacent(1, -1));
-//        possibleKingCaptures.add(getPosition().getAdjacent(0, 1));
-//        possibleKingCaptures.add(getPosition().getAdjacent(0, -1));
-//        possibleKingCaptures.add(getPosition().getAdjacent(-1, 1));
-//        possibleKingCaptures.add(getPosition().getAdjacent(-1, 0));
-//        possibleKingCaptures.add(getPosition().getAdjacent(-1, -1));
-//
-//        for (Position pos : possibleKingCaptures) {
-//            if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) != null) {
-//                if (
-//                        getCb().getPieceAt(pos).getPlayerColor() != getPlayerColor() //&&
-//                        //!getCb().isPositionAttacked(pos, getPlayerColor()) &&
-//                        //!getCb().getPieceAt(pos).isDefended()
-//                ) {
-//                    validKingCaptures.add(pos);
-//                }
-////                else {
-////                    kingDefending.add(getCb().getPieceAt(pos));
-////                }
-//            }
-//        }
-
-        setCaptures(validKingCaptures);
-        //setDefending(kingDefending);
-    }
-
-    private void removeKingAndUpdate() {
-        getCb().removePieceFromBoard(this);
-        if (getPlayerColor() == PlayerColor.White) {
-            getCb().updatePieces(PlayerColor.Black, getCb().getKing(PlayerColor.Black));
-        }
-        else {
-            getCb().updatePieces(PlayerColor.White, getCb().getKing(PlayerColor.White));
-        }
-    }
-
-    private void addKingAndUpdate() {
-        getCb().addPieceToBoard(this);
-        if (getPlayerColor() == PlayerColor.White) {
-            getCb().updatePieces(PlayerColor.Black, getCb().getKing(PlayerColor.Black));
-        }
-        else {
-            getCb().updatePieces(PlayerColor.White, getCb().getKing(PlayerColor.White));
-        }
     }
 
     public boolean isCheckmated() {
