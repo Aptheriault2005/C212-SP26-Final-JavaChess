@@ -13,12 +13,23 @@ public class Rook extends Piece {
 
     @Override
     public void update() {
+        getDefending().clear();
         this.setMoves(new HashSet<>());
         this.setCaptures(new HashSet<>());
         this.addMovesAndCapturesInLine(0,1);
         this.addMovesAndCapturesInLine(0,-1);
         this.addMovesAndCapturesInLine(1,0);
         this.addMovesAndCapturesInLine(-1,0);
-        removeIllegalMovesIfInCheck();
+
+        if (!getTryToValidate()) return;
+        validateMoves();
+//        removeIllegalMovesIfInCheck();
+//        removeIllegalMovesIfPinned();
+    }
+
+    @Override
+    public Piece copy(ChessBoard newBoard) {
+        Rook copied = new Rook(getPosition(), newBoard, getPlayerColor());
+        return copied;
     }
 }

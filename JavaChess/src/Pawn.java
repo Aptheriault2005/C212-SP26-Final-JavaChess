@@ -15,9 +15,14 @@ public class Pawn extends Piece implements IFirstMove{
 
     @Override
     public void update() {
+        getDefending().clear();
         addPawnMoves();
         addPawnCaptures();
-        removeIllegalMovesIfInCheck();
+
+        if (!getTryToValidate()) return;
+        validateMoves();
+//        removeIllegalMovesIfInCheck();
+//        removeIllegalMovesIfPinned();
     }
 
     @Override
@@ -28,6 +33,13 @@ public class Pawn extends Piece implements IFirstMove{
     @Override
     public void setIsFirstMove(boolean firstMove) {
         this.firstMove = firstMove;
+    }
+
+    @Override
+    public Piece copy(ChessBoard newBoard) {
+        Pawn copied = new Pawn(getPosition(), newBoard, getPlayerColor());
+        copied.setIsFirstMove(getIsFirstMove());
+        return copied;
     }
 
     private void addPawnMoves() {

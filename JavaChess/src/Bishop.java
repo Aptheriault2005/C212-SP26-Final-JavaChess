@@ -13,12 +13,23 @@ public class Bishop extends Piece{
 
     @Override
     public void update() {
+        getDefending().clear();
         this.setMoves(new HashSet<>());
         this.setCaptures(new HashSet<>());
         this.addMovesAndCapturesInLine(1,1);
         this.addMovesAndCapturesInLine(1,-1);
         this.addMovesAndCapturesInLine(-1,1);
         this.addMovesAndCapturesInLine(-1,-1);
-        removeIllegalMovesIfInCheck();
+
+        if (!getTryToValidate()) return;
+        validateMoves();
+//        removeIllegalMovesIfInCheck();
+//        removeIllegalMovesIfPinned();
+    }
+
+    @Override
+    public Piece copy(ChessBoard newBoard) {
+        Bishop copied = new Bishop(getPosition(), newBoard, getPlayerColor());
+        return copied;
     }
 }

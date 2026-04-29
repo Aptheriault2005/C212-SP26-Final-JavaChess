@@ -19,10 +19,30 @@ public class King extends Piece implements IFirstMove {
 
     @Override
     public void update() {
-        this.setMoves(new HashSet<>());
-        this.setCaptures(new HashSet<>());
-        addKingMoves();
-        addKingCaptures();
+//        getDefending().clear();
+//        this.setMoves(new HashSet<>());
+//        this.setCaptures(new HashSet<>());
+//        addKingMoves();
+//        addKingCaptures();
+
+        addMovesAndCapturesAtOffset(1,1);
+        addMovesAndCapturesAtOffset(1,0);
+        addMovesAndCapturesAtOffset(1,-1);
+        addMovesAndCapturesAtOffset(-1,1);
+        addMovesAndCapturesAtOffset(-1,0);
+        addMovesAndCapturesAtOffset(-1,-1);
+        addMovesAndCapturesAtOffset(0,-1);
+        addMovesAndCapturesAtOffset(0,1);
+
+        if (!getTryToValidate()) return;
+        validateMoves();
+    }
+
+    @Override
+    public Piece copy(ChessBoard newBoard) {
+        King copied = new King(getPosition(), newBoard, getPlayerColor());
+        copied.setIsFirstMove(getIsFirstMove());
+        return copied;
     }
 
     @Override
@@ -39,7 +59,7 @@ public class King extends Piece implements IFirstMove {
         HashSet<Position> possibleKingMoves = new HashSet<>();
         HashSet<Position> validKingMoves = new HashSet<>();
 
-        removeKingAndUpdate();
+//        removeKingAndUpdate();
 
         possibleKingMoves.add(getPosition().getAdjacent(1, 1));
         possibleKingMoves.add(getPosition().getAdjacent(1, 0));
@@ -53,14 +73,14 @@ public class King extends Piece implements IFirstMove {
         for (Position pos : possibleKingMoves) {
             if (
                     getCb().isValidPosition(pos) &&
-                    getCb().getPieceAt(pos) == null &&
-                    !getCb().isPositionAttacked(pos, this.getPlayerColor())
+                    getCb().getPieceAt(pos) == null //&&
+                    //!getCb().isPositionAttacked(pos, this.getPlayerColor())
             ) {
                 validKingMoves.add(pos);
             }
         }
-
-        addKingAndUpdate();
+//
+//        addKingAndUpdate();
 
         this.setMoves(validKingMoves);
     }
@@ -70,57 +90,51 @@ public class King extends Piece implements IFirstMove {
         HashSet<Position> validKingCaptures = new HashSet<>();
         HashSet<Piece> kingDefending = new HashSet<>();
 
-        possibleKingCaptures.add(getPosition().getAdjacent(1, 1));
-        possibleKingCaptures.add(getPosition().getAdjacent(1, 0));
-        possibleKingCaptures.add(getPosition().getAdjacent(1, -1));
-        possibleKingCaptures.add(getPosition().getAdjacent(0, 1));
-        possibleKingCaptures.add(getPosition().getAdjacent(0, -1));
-        possibleKingCaptures.add(getPosition().getAdjacent(-1, 1));
-        possibleKingCaptures.add(getPosition().getAdjacent(-1, 0));
-        possibleKingCaptures.add(getPosition().getAdjacent(-1, -1));
-
-        for (Position pos : possibleKingCaptures) {
-            if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) != null) {
-                if (
-                        getCb().getPieceAt(pos).getPlayerColor() != getPlayerColor() &&
-                        !getCb().isPositionAttacked(pos, getPlayerColor()) &&
-                        !getCb().getPieceAt(pos).isDefended()
-                ) {
-                    validKingCaptures.add(pos);
-                }
-                else {
-                    kingDefending.add(getCb().getPieceAt(pos));
-                }
-            }
-        }
+//        possibleKingCaptures.add(getPosition().getAdjacent(1, 1));
+//        possibleKingCaptures.add(getPosition().getAdjacent(1, 0));
+//        possibleKingCaptures.add(getPosition().getAdjacent(1, -1));
+//        possibleKingCaptures.add(getPosition().getAdjacent(0, 1));
+//        possibleKingCaptures.add(getPosition().getAdjacent(0, -1));
+//        possibleKingCaptures.add(getPosition().getAdjacent(-1, 1));
+//        possibleKingCaptures.add(getPosition().getAdjacent(-1, 0));
+//        possibleKingCaptures.add(getPosition().getAdjacent(-1, -1));
+//
+//        for (Position pos : possibleKingCaptures) {
+//            if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) != null) {
+//                if (
+//                        getCb().getPieceAt(pos).getPlayerColor() != getPlayerColor() //&&
+//                        //!getCb().isPositionAttacked(pos, getPlayerColor()) &&
+//                        //!getCb().getPieceAt(pos).isDefended()
+//                ) {
+//                    validKingCaptures.add(pos);
+//                }
+////                else {
+////                    kingDefending.add(getCb().getPieceAt(pos));
+////                }
+//            }
+//        }
 
         setCaptures(validKingCaptures);
-        setDefending(kingDefending);
+        //setDefending(kingDefending);
     }
 
     private void removeKingAndUpdate() {
         getCb().removePieceFromBoard(this);
-        HashSet<Piece> otherKingSet = new HashSet<>();
         if (getPlayerColor() == PlayerColor.White) {
-            otherKingSet.add(getCb().getKing(PlayerColor.Black));
-            getCb().updatePieces(PlayerColor.Black, otherKingSet);
+            getCb().updatePieces(PlayerColor.Black, getCb().getKing(PlayerColor.Black));
         }
         else {
-            otherKingSet.add(getCb().getKing(PlayerColor.White));
-            getCb().updatePieces(PlayerColor.White, otherKingSet);
+            getCb().updatePieces(PlayerColor.White, getCb().getKing(PlayerColor.White));
         }
     }
 
     private void addKingAndUpdate() {
         getCb().addPieceToBoard(this);
-        HashSet<Piece> otherKingSet = new HashSet<>();
         if (getPlayerColor() == PlayerColor.White) {
-            otherKingSet.add(getCb().getKing(PlayerColor.Black));
-            getCb().updatePieces(PlayerColor.Black, otherKingSet);
+            getCb().updatePieces(PlayerColor.Black, getCb().getKing(PlayerColor.Black));
         }
         else {
-            otherKingSet.add(getCb().getKing(PlayerColor.White));
-            getCb().updatePieces(PlayerColor.White, otherKingSet);
+            getCb().updatePieces(PlayerColor.White, getCb().getKing(PlayerColor.White));
         }
     }
 

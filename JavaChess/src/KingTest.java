@@ -78,7 +78,7 @@ class KingTest {
     }
 
     @Test
-    void NotACheckmateKingCanCapture() {
+    void NotACheckmateKingCanCaptureQueen() {
         ChessBoard cb = new ChessBoard(false);
         King blackKing = new King(Position.at(7,7), cb, Piece.PlayerColor.Black);
         King whiteKing = new King(Position.at(0,0), cb, Piece.PlayerColor.White);
@@ -93,10 +93,15 @@ class KingTest {
         cb.movePiece(blackKing, Position.at(6,7));
 
         cb.movePiece(whiteQueen, Position.at(6,6));
+        cb.printBoard();
+
         cb.printPieceMoves(blackKing);
         assertEquals(1, blackKing.getCaptures().size());
         assertEquals(0, blackKing.getMoves().size());
         assertFalse(blackKing.isCheckmated());
+        assertTrue(cb.movePiece(blackKing, whiteQueen.getPosition()));
+
+        cb.printBoard();
     }
 
     @Test

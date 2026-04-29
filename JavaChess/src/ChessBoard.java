@@ -9,6 +9,7 @@ public class ChessBoard {
     private final List<Piece> pieceList = new ArrayList<>();
     private King whiteKing = null;
     private King blackKing = null;
+    private ChessBoard validationBoard;
 
     public ChessBoard(boolean startingPieces) {
         for (int i = 0; i < ROWS; i++) {
@@ -52,10 +53,10 @@ public class ChessBoard {
         this(false);
     }
 
-    public void updatePieces(Piece.PlayerColor player, HashSet<Piece> excluded) {
+    public void updatePieces(Piece.PlayerColor player, Piece excluded) {
         final List<Piece> finalPieceList = List.copyOf(pieceList);
         for (Piece p : finalPieceList) {
-            if (p.getPlayerColor() == player && !excluded.contains(p)) {
+            if (p.getPlayerColor() == player && p != excluded) {
                 p.update();
             }
         }
@@ -79,6 +80,12 @@ public class ChessBoard {
         }
         if (blackKing != null) {
             blackKing.update();
+        }
+    }
+
+    private void setPiecesTryToValidate(boolean active) {
+        for (Piece p : pieceList) {
+            p.setTryToValidate(active);
         }
     }
 
@@ -106,6 +113,9 @@ public class ChessBoard {
             capturePiece(getPieceAt(pos));
             piece.setPosition(pos);
             pieceMap.put(piece.getPosition(), piece);
+            if (piece instanceof IFirstMove) {
+                ((IFirstMove) piece).setIsFirstMove(false);
+            }
             updatePieces();
             return true;
         }
@@ -130,36 +140,113 @@ public class ChessBoard {
         pieceMap.put(piece.getPosition(), piece);
     }
 
-    public boolean isPositionAttacked(Position pos, Piece.PlayerColor defenderColor) {
-        for (Piece piece : pieceList) {
-            if (piece.getPlayerColor() != defenderColor && (piece.getMoves().contains(pos) || piece.getCaptures().contains(pos))) {
-                return true;
-            }
+//    public boolean isPositionAttacked(Position pos, Piece.PlayerColor defenderColor) {
+//        Piece testPiece = new Piece(pos, this, defenderColor) {
+//            @Override
+//            public void update() {}
+//        };
+//
+//        final List<Piece> finalPieceList = List.copyOf(pieceList);
+//        addNewPiece(testPiece);
+//        for (Piece piece : finalPieceList) {
+//            if (piece.getPlayerColor() != defenderColor && !(piece instanceof King)) {
+//                piece.update();
+//                if (piece.getCaptures().contains(pos)) {
+//                    capturePiece(testPiece);
+//                    piece.update();
+//                    return true;
+//                }
+//            }
+//        }
+//        capturePiece(testPiece);
+//        if (defenderColor == Piece.PlayerColor.White) {
+//            updatePieces(Piece.PlayerColor.Black, blackKing);
+//        }
+//        else {
+//            updatePieces(Piece.PlayerColor.White, whiteKing);
+//        }
+//        return false;
+//    }
+//
+//    public boolean moveBlocksCheck(Position pos, Piece.PlayerColor player) {
+//        King king = getKing(player);
+//        if (king.getPiecesCheckingKing().isEmpty() || getPieceAt(pos) != null) return false;
+//
+//        Piece pieceCheckingKing = king.getPiecesCheckingKing().getFirst();
+//        Piece testPiece = new Piece(pos, this, player) {
+//            @Override
+//            public void update() {}
+//        };
+//
+//        addNewPiece(testPiece);
+//        pieceCheckingKing.update();
+//
+//        if (pieceCheckingKing.getCaptures().contains(king.getPosition())) {
+//            capturePiece(testPiece);
+//            return false;
+//        }
+//        else {
+//            capturePiece(testPiece);
+//            return true;
+//        }
+//    }
+
+    public boolean validateMove(Piece piece, Position move) {
+        validationBoard = copy();
+        validationBoard.setPiecesTryToValidate(false);
+        validationBoard.movePiece(validationBoard.getPieceAt(piece.getPosition()), move);
+        if (validationBoard.getKing(piece.getPlayerColor()) != null) {
+            return !validationBoard.getKing(piece.getPlayerColor()).isInCheck();
         }
-        return false;
-    }
+        return true;
 
-    public boolean moveBlocksCheck(Position pos, Piece.PlayerColor player) {
-        King king = getKing(player);
-        if (king.getPiecesCheckingKing().isEmpty() || getPieceAt(pos) != null) return false;
-
-        Piece pieceCheckingKing = king.getPiecesCheckingKing().getFirst();
-        Piece testPiece = new Piece(pos, this, player) {
-            @Override
-            public void update() {}
-        };
-
-        addNewPiece(testPiece);
-        pieceCheckingKing.update();
-
-        if (pieceCheckingKing.getCaptures().contains(king.getPosition())) {
-            capturePiece(testPiece);
-            return false;
-        }
-        else {
-            capturePiece(testPiece);
-            return true;
-        }
+//        King king = getKing(piece.getPlayerColor());
+//        Position start = piece.getPosition();
+//        setPiecesTryToValidate(false);
+//
+//        if (piece.getCaptures().contains(move)) {
+//            Piece capturedPiece = getPieceAt(move);
+//            if (movePiece(piece, move)) {
+//                if (king.isInCheck()) {
+//                    piece.setPosition(start);
+//                    addPieceToBoard(capturedPiece);
+//                    pieceList.add(capturedPiece);
+//                    setPiecesTryToValidate(true);
+//                    return false;
+//                }
+//                else {
+//                    piece.setPosition(start);
+//                    addPieceToBoard(capturedPiece);
+//                    pieceList.add(capturedPiece);
+//                    setPiecesTryToValidate(true);
+//                    return true;
+//                }
+//            }
+//            setPiecesTryToValidate(true);
+//            return false;
+//        }
+//        else if (piece.getMoves().contains(move)){
+//            if (movePiece(piece, move)) {
+//                if (king.isInCheck()) {
+//                    piece.setPosition(start);
+//                    pieceMap.put(move, null);
+//                    pieceMap.put(start, piece);
+//                    setPiecesTryToValidate(true);
+//                    return false;
+//                }
+//                else {
+//                    piece.setPosition(start);
+//                    pieceMap.put(move, null);
+//                    pieceMap.put(start, piece);
+//                    setPiecesTryToValidate(true);
+//                    return true;
+//                }
+//            }
+//            setPiecesTryToValidate(true);
+//            return false;
+//        }
+//        setPiecesTryToValidate(true);
+//        return false;
     }
 
     public King getKing(Piece.PlayerColor player) {
@@ -180,6 +267,16 @@ public class ChessBoard {
             return pieceMap.get(position);
         }
         return null;
+    }
+
+    public ChessBoard copy() {
+        validationBoard = new ChessBoard(false);
+        for (Piece p : pieceList) {
+            validationBoard.addNewPiece(p.copy(validationBoard));
+        }
+        validationBoard.setPiecesTryToValidate(false);
+        validationBoard.updatePieces();
+        return validationBoard;
     }
 
     public boolean isValidPosition(Position position) {

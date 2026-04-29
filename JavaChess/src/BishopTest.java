@@ -19,10 +19,11 @@ class BishopTest {
 
         assertEquals(7, bishopW1.getMoves().size());
         assertEquals(0, bishopW1.getCaptures().size());
-        cb.movePiece(bishopW1, Position.at(5,7));
+        assertTrue(cb.movePiece(bishopW1, Position.at(5,7)));
+
         assertEquals(6, bishopB1.getMoves().size());
         assertEquals(1, bishopB1.getCaptures().size());
-        cb.movePiece(bishopB1, Position.at(5,7));
+        assertTrue(cb.movePiece(bishopB1, Position.at(5,7)));
 
         cb.printBoard();
     }

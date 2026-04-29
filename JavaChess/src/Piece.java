@@ -4,6 +4,7 @@ public abstract class Piece {
 
     public enum PlayerColor {White, Black}
 
+    private boolean tryToValidate;
     private final ChessBoard cb;
     private final PlayerColor playerColor;
     private Position position;
@@ -15,6 +16,7 @@ public abstract class Piece {
         position = pos;
         cb = chessBoard;
         playerColor = player;
+        tryToValidate = true;
         setMoves(new HashSet<>());
         setCaptures(new HashSet<>());
         setDefending(new HashSet<>());
@@ -73,26 +75,88 @@ public abstract class Piece {
         return false;
     }
 
-    protected void removeIllegalMovesIfInCheck() {
-        King king = (cb.getKing(playerColor));
-        if (king == null) return;
+//    protected void removeIllegalMovesIfPinned() {
+//        King king = (cb.getKing(playerColor));
+//        if (king == null || king.isInCheck()) return;
+//
+//        cb.removePieceFromBoard(this);
+//        // Update pieces without them checking for illegal moves if pinned
+//
+//        if (!king.isInCheck()) {
+//            cb.addPieceToBoard(this);
+//            return;
+//        }
+//
+//        HashSet<Position> validMoves = new HashSet<>();
+//        HashSet<Position> validCaptures = new HashSet<>();
+//
+//        for (Piece piece : cb.getPieceList()) {
+//            if (piece instanceof Queen || piece instanceof Rook || piece instanceof Bishop) {
+//                if (piece.getPlayerColor() != playerColor) {
+//                    for (Position move : getMoves()) {
+//                        if (cb.moveBlocksCheck(move, playerColor)) {
+//                            validMoves.add(move);
+//                        }
+//                    }
+//                    for (Position capture : getCaptures()) {
+//                        if (cb.moveBlocksCheck(capture, playerColor)) {
+//                            validCaptures.add(capture);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        cb.addPieceToBoard(this);
+//        captures = validCaptures;
+//        moves = validMoves;
+//    }
 
-        if (king.isInCheck()) {
-            HashSet<Position> validMoves = new HashSet<>();
-            HashSet<Position> validCaptures = new HashSet<>();
-            for (Position pos : captures) {
-                if (pos.equals(king.getPiecesCheckingKing().getFirst().getPosition())) {
-                    validCaptures.add(pos);
-                }
+    protected void validateMoves() {
+        HashSet<Position> validMoves = new HashSet<>();
+        HashSet<Position> validCaptures = new HashSet<>();
+        for (Position move : moves) {
+            if (cb.validateMove(this, move)) {
+                validMoves.add(move);
             }
-            for (Position pos : moves) {
-                if (getCb().moveBlocksCheck(pos, playerColor)) {
-                    validMoves.add(pos);
-                }
-            }
-            captures = validCaptures;
-            moves = validMoves;
         }
+        for (Position capture : captures) {
+            if (cb.validateMove(this, capture)) {
+                validCaptures.add(capture);
+            }
+        }
+        setMoves(validMoves);
+        setCaptures(validCaptures);
+    }
+
+//    protected void removeIllegalMovesIfInCheck() {
+//        King king = (cb.getKing(playerColor));
+//        if (king == null) return;
+//
+//        if (king.isInCheck()) {
+//            HashSet<Position> validMoves = new HashSet<>();
+//            HashSet<Position> validCaptures = new HashSet<>();
+//            for (Position pos : captures) {
+//                if (pos.equals(king.getPiecesCheckingKing().getFirst().getPosition())) {
+//                    validCaptures.add(pos);
+//                }
+//            }
+//            for (Position pos : moves) {
+//                if (getCb().moveBlocksCheck(pos, playerColor)) {
+//                    validMoves.add(pos);
+//                }
+//            }
+//            captures = validCaptures;
+//            moves = validMoves;
+//        }
+//    }
+
+    public boolean getTryToValidate() {
+        return tryToValidate;
+    }
+
+    public void setTryToValidate(boolean active) {
+        tryToValidate = active;
     }
 
     public boolean isValidMove(Position newPos) {
@@ -108,6 +172,8 @@ public abstract class Piece {
     }
 
     public abstract void update();
+
+    public abstract Piece copy(ChessBoard newBoard);
 
     public HashSet<Position> getMoves() {
         return moves;
