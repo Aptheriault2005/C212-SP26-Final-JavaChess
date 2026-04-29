@@ -36,7 +36,6 @@ public class GameGUI extends JPanel implements ActionListener {
                         selectedPiece.getCaptures().contains(selectedPos)) {
                     game.makeMove(selectedPiece, selectedPos);
                     game.getGameGUI().UpdateGUI();
-                    System.out.println(selectedPiece.getChar() + selectedPos.getChessNotation());
                     selectedPiece = null;
                 }
                 else {

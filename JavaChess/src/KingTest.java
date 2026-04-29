@@ -222,4 +222,105 @@ class KingTest {
 
         cb.printBoard();
     }
+
+    @Test
+    void kingSideCastle() {
+        ChessBoard cb = new ChessBoard(true);
+
+        King whiteKing = cb.getKing(Piece.PlayerColor.White);
+        assertTrue(cb.movePiece(cb.getPieceAt(Position.at(1,4)), Position.at(3,4)));
+        assertTrue(cb.movePiece(cb.getPieceAt(Position.at(0,5)), Position.at(1,4)));
+        assertTrue(cb.movePiece(cb.getPieceAt(Position.at(0,6)), Position.at(2,5)));
+        assertTrue(whiteKing.getMoves().contains(Position.at(0,6)));
+        cb.printPieceMoves(whiteKing);
+
+        assertTrue(cb.movePiece(whiteKing, Position.at(0,6)));
+        cb.printBoard();
+
+        assertInstanceOf(Rook.class, cb.getPieceAt(Position.at(0, 5)));
+        assertInstanceOf(King.class, cb.getPieceAt(Position.at(0, 6)));
+
+        King blackKing = cb.getKing(Piece.PlayerColor.Black);
+        assertTrue(cb.movePiece(cb.getPieceAt(Position.at(6,4)), Position.at(4,4)));
+        assertTrue(cb.movePiece(cb.getPieceAt(Position.at(7,5)), Position.at(6,4)));
+        assertTrue(cb.movePiece(cb.getPieceAt(Position.at(7,6)), Position.at(5,5)));
+        assertTrue(blackKing.getMoves().contains(Position.at(7,6)));
+        cb.printPieceMoves(blackKing);
+
+        assertTrue(cb.movePiece(blackKing, Position.at(7,6)));
+        cb.printBoard();
+
+        assertInstanceOf(Rook.class, cb.getPieceAt(Position.at(7, 5)));
+        assertInstanceOf(King.class, cb.getPieceAt(Position.at(7, 6)));
+    }
+
+    @Test
+    void queenSideCastle() {
+        ChessBoard cb = new ChessBoard(true);
+        King whiteKing = cb.getKing(Piece.PlayerColor.White);
+        cb.capturePiece(cb.getPieceAt(Position.at(0,1)));
+        cb.capturePiece(cb.getPieceAt(Position.at(0,2)));
+        cb.capturePiece(cb.getPieceAt(Position.at(0,3)));
+        King blackKing = cb.getKing(Piece.PlayerColor.Black);
+        cb.capturePiece(cb.getPieceAt(Position.at(7,1)));
+        cb.capturePiece(cb.getPieceAt(Position.at(7,2)));
+        cb.capturePiece(cb.getPieceAt(Position.at(7,3)));
+        cb.updatePieces();
+
+        cb.printPieceMoves(whiteKing);
+        cb.printPieceMoves(blackKing);
+
+        assertTrue(whiteKing.getMoves().contains(Position.at(0,2)));
+        assertTrue(blackKing.getMoves().contains(Position.at(7,2)));
+
+        assertTrue(cb.movePiece(whiteKing, Position.at(0,2)));
+        cb.printBoard();
+        assertInstanceOf(Rook.class, cb.getPieceAt(Position.at(0, 3)));
+        assertInstanceOf(King.class, cb.getPieceAt(Position.at(0, 2)));
+
+        assertTrue(cb.movePiece(blackKing, Position.at(7,2)));
+        cb.printBoard();
+        assertInstanceOf(Rook.class, cb.getPieceAt(Position.at(7, 3)));
+        assertInstanceOf(King.class, cb.getPieceAt(Position.at(7, 2)));
+    }
+
+    @Test
+    void invalidCastleNoCastlingThroughCheck() {
+        ChessBoard cb = new ChessBoard(true);
+        King whiteKing = cb.getKing(Piece.PlayerColor.White);
+        King blackKing = cb.getKing(Piece.PlayerColor.Black);
+        cb.capturePiece(cb.getPieceAt(Position.at(0,1)));
+        cb.capturePiece(cb.getPieceAt(Position.at(0,2)));
+        cb.capturePiece(cb.getPieceAt(Position.at(0,3)));
+        cb.capturePiece(cb.getPieceAt(Position.at(1,3)));
+        cb.capturePiece(cb.getPieceAt(Position.at(6,3)));
+        cb.capturePiece(cb.getPieceAt(Position.at(7,6)));
+        cb.capturePiece(cb.getPieceAt(Position.at(7,5)));
+        cb.capturePiece(cb.getPieceAt(Position.at(6,5)));
+        cb.forceMovePiece(cb.getPieceAt(Position.at(0,7)), Position.at(3,5));
+        cb.updatePieces();
+
+        cb.printPieceMoves(whiteKing);
+        assertEquals(0, whiteKing.getMoves().size());
+        assertFalse(cb.movePiece(whiteKing, Position.at(0,2)));
+
+        cb.printPieceMoves(blackKing);
+        assertEquals(1, blackKing.getMoves().size());
+        assertFalse(cb.movePiece(blackKing, Position.at(0,6)));
+    }
+
+    @Test
+    void invalidCastleNoCastlingResultingInCheck() {
+        ChessBoard cb = new ChessBoard(true);
+        King blackKing = cb.getKing(Piece.PlayerColor.Black);
+        cb.capturePiece(cb.getPieceAt(Position.at(7,1)));
+        cb.capturePiece(cb.getPieceAt(Position.at(7,2)));
+        cb.capturePiece(cb.getPieceAt(Position.at(7,3)));
+        cb.forceMovePiece(cb.getPieceAt(Position.at(0,3)), Position.at(6,1));
+        cb.updatePieces();
+
+        cb.printPieceMoves(blackKing);
+        assertEquals(1, blackKing.getMoves().size());
+        assertFalse(cb.movePiece(blackKing, Position.at(0,2)));
+    }
 }

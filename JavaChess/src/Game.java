@@ -43,30 +43,36 @@ public class Game {
 
     public boolean makeMove(Piece pieceToMove, Position targetPosition) {
         if (pieceToMove != null && pieceToMove.getPlayerColor() == getCurrentPlayer() && cb.movePiece(pieceToMove, targetPosition)) {
+            System.out.print(turn + 1 + ". ");
+            if (!(pieceToMove instanceof Pawn)) {
+                System.out.print(pieceToMove.getChar());
+            }
+            System.out.print(targetPosition.getChessNotation());
             if (getCurrentPlayer() == Piece.PlayerColor.White) {
                 if (cb.getKing(Piece.PlayerColor.Black).isInCheck()) {
                     if (cb.getKing(Piece.PlayerColor.Black).isCheckmated()) {
-                        System.out.println("Checkmate Black");
+                        System.out.print("#");
                         if (FrameGUI.frameGUIInstance.isEmpty()) return true;
                         FrameGUI.frameGUIInstance.get().toGameOver("White wins by checkmate");
                     }
                     else {
-                        System.out.println("Check Black");
+                        System.out.print("+");
                     }
                 }
             }
             else {
                 if (cb.getKing(Piece.PlayerColor.White).isInCheck()) {
                     if (cb.getKing(Piece.PlayerColor.White).isCheckmated()) {
-                        System.out.println("Checkmate White");
+                        System.out.print("#");
                         if (FrameGUI.frameGUIInstance.isEmpty()) return true;
                         FrameGUI.frameGUIInstance.get().toGameOver("Black wins by checkmate");
                     }
                     else {
-                        System.out.println("Check White");
+                        System.out.print("+");
                     }
                 }
             }
+            System.out.println();
             turn++;
             return true;
         }

@@ -107,6 +107,18 @@ public class ChessBoard {
         pieceList.remove(piece);
     }
 
+    public void forceMovePiece(Piece piece, Position pos) {
+        Position start = piece.getPosition();
+        pieceMap.put(piece.getPosition(), null);
+        if (getPieceAt(pos) != null) {
+            capturePiece(getPieceAt(pos));
+        }
+        piece.setPosition(pos);
+        pieceMap.put(piece.getPosition(), piece);
+        piece.onMove(start, pos);
+        updatePieces();
+    }
+
     public boolean movePiece(Piece piece, Position pos) {
         if (piece.isValidCapture(pos)) {
             Position start = piece.getPosition();
@@ -134,10 +146,6 @@ public class ChessBoard {
 
     public void removePieceFromBoard(Piece piece) {
         pieceMap.put(piece.getPosition(), null);
-    }
-
-    public void addPieceToBoard(Piece piece) {
-        pieceMap.put(piece.getPosition(), piece);
     }
 
     public boolean validateMove(Piece piece, Position move) {

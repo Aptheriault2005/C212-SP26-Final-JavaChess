@@ -63,6 +63,8 @@ public class Pawn extends Piece{
     public Piece copy(ChessBoard newBoard) {
         Pawn copied = new Pawn(getPosition(), newBoard, getPlayerColor());
         copied.firstMove = firstMove;
+        copied.canBeCapturedEnPessant = canBeCapturedEnPessant;
+        copied.enPessantTurnOver = enPessantTurnOver;
         return copied;
     }
 
