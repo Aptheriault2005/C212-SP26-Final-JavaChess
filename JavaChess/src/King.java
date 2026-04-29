@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class King extends Piece implements IFirstMove {
+public class King extends Piece {
 
     private boolean firstMove = true;
     private final List<Piece> piecesCheckingKing;
@@ -37,18 +37,13 @@ public class King extends Piece implements IFirstMove {
     @Override
     public Piece copy(ChessBoard newBoard) {
         King copied = new King(getPosition(), newBoard, getPlayerColor());
-        copied.setIsFirstMove(getIsFirstMove());
+        copied.firstMove = firstMove;
         return copied;
     }
 
     @Override
-    public boolean getIsFirstMove() {
-        return firstMove;
-    }
-
-    @Override
-    public void setIsFirstMove(boolean firstMove) {
-        this.firstMove = firstMove;
+    public void onMove(Position start, Position end) {
+        firstMove = false;
     }
 
     public boolean isCheckmated() {

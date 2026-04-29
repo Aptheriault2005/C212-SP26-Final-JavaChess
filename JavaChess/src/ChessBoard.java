@@ -109,23 +109,23 @@ public class ChessBoard {
 
     public boolean movePiece(Piece piece, Position pos) {
         if (piece.isValidCapture(pos)) {
+            Position start = piece.getPosition();
             pieceMap.put(piece.getPosition(), null);
-            capturePiece(getPieceAt(pos));
+            if (getPieceAt(pos) != null) {
+                capturePiece(getPieceAt(pos));
+            }
             piece.setPosition(pos);
             pieceMap.put(piece.getPosition(), piece);
-            if (piece instanceof IFirstMove) {
-                ((IFirstMove) piece).setIsFirstMove(false);
-            }
+            piece.onMove(start, pos);
             updatePieces();
             return true;
         }
         else if (piece.isValidMove(pos)) {
+            Position start = piece.getPosition();
             pieceMap.put(piece.getPosition(), null);
             piece.setPosition(pos);
             pieceMap.put(piece.getPosition(), piece);
-            if (piece instanceof IFirstMove) {
-                ((IFirstMove) piece).setIsFirstMove(false);
-            }
+            piece.onMove(start, pos);
             updatePieces();
             return true;
         }
@@ -205,13 +205,11 @@ public class ChessBoard {
         for (int i = ROWS - 1; i >= 0; i--) {
             for (int j = 0; j < COLUMNS; j++) {
                 Position pos = new Position(i,j);
-                if (pieceMap.get(pos) != null)  {
-                    if (piece.getCaptures().contains(pos)) {
-                        boardState[i][j] = 'x';
-                    }
-                    else {
-                        boardState[i][j] = pieceMap.get(pos).getChar();
-                    }
+                if (piece.getCaptures().contains(pos)) {
+                    boardState[i][j] = 'x';
+                }
+                else if (pieceMap.get(pos) != null)  {
+                    boardState[i][j] = pieceMap.get(pos).getChar();
                 }
                 else {
                     if (piece.getMoves().contains(pos)) {
@@ -220,7 +218,6 @@ public class ChessBoard {
                     else {
                         boardState[i][j] = ' ';
                     }
-
                 }
             }
         }
@@ -228,15 +225,16 @@ public class ChessBoard {
     }
 
     public void printBoard() {
-        for (int i = ROWS - 1; i >= 0; i--) {
-            for (int j = 0; j < COLUMNS; j++) {
-                Position pos = new Position(i,j);
-                if (pieceMap.get(pos) != null)  {
-                    System.out.print(pieceMap.get(pos).getChar());
-                }
-                else {
+        char[][] boardState = getBoardStateCharArray();
+        for (int i = boardState.length - 1; i >= 0; i--) {
+            for (int j = 0; j < boardState[0].length; j++) {
+                if (boardState[i][j] == ' ') {
                     System.out.print("-");
                 }
+                else {
+                    System.out.print(boardState[i][j]);
+                }
+
                 System.out.print(" ");
             }
             System.out.println();
@@ -245,25 +243,16 @@ public class ChessBoard {
     }
 
     public void printPieceMoves(Piece piece) {
-        for (int i = ROWS - 1; i >= 0; i--) {
-            for (int j = 0; j < COLUMNS; j++) {
-                Position pos = new Position(i,j);
-                if (pieceMap.get(pos) != null)  {
-                    if (piece.getCaptures().contains(pos)) {
-                        System.out.print("x");
-                    }
-                    else {
-                        System.out.print(pieceMap.get(pos).getChar());
-                    }
+        char[][] boardState = getPieceMovesCharArray(piece);
+        for (int i = boardState.length - 1; i >= 0; i--) {
+            for (int j = 0; j < boardState[0].length; j++) {
+                if (boardState[i][j] == ' ') {
+                    System.out.print("-");
                 }
                 else {
-                    if (piece.getMoves().contains(pos)) {
-                        System.out.print("o");
-                    }
-                    else {
-                        System.out.print("-");
-                    }
+                    System.out.print(boardState[i][j]);
                 }
+
                 System.out.print(" ");
             }
             System.out.println();

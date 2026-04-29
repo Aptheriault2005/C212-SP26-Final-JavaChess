@@ -75,6 +75,10 @@ public abstract class Piece {
         setCaptures(validCaptures);
     }
 
+    public void onMove(Position start, Position end) {
+
+    }
+
     public boolean getTryToValidate() {
         return tryToValidate;
     }
