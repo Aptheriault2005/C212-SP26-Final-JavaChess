@@ -43,15 +43,15 @@ public class Pawn extends Piece implements IFirstMove{
 
     private void addPawnMoves() {
         HashSet<Position> pawnMoves = new HashSet<>();
-        Position pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1,0) : getPosition().getAdjacent(-1,0);
-        if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) == null) {
-            pawnMoves.add(pos);
+        Position move1 = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1,0) : getPosition().getAdjacent(-1,0);
+        if (getCb().isValidPosition(move1) && getCb().getPieceAt(move1) == null) {
+            pawnMoves.add(move1);
         }
 
         if (getIsFirstMove()) {
-            pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(2,0) : getPosition().getAdjacent(-2,0);
-            if (getCb().isValidPosition(pos) && getCb().getPieceAt(pos) == null) {
-                pawnMoves.add(pos);
+            Position move2 = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(2,0) : getPosition().getAdjacent(-2,0);
+            if (getCb().isValidPosition(move2) && getCb().getPieceAt(move1) == null && getCb().getPieceAt(move2) == null) {
+                pawnMoves.add(move2);
             }
         }
 

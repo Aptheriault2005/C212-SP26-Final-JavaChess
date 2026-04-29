@@ -7,6 +7,7 @@ public class Game {
     private int turn = 0;
 
     public Game() {
+        System.out.println("New Game");
         cb = new ChessBoard(true);
         gameGUI = new GameGUI(this);
     }
@@ -46,17 +47,20 @@ public class Game {
                 if (cb.getKing(Piece.PlayerColor.Black).isInCheck()) {
                     if (cb.getKing(Piece.PlayerColor.Black).isCheckmated()) {
                         System.out.println("Checkmate Black");
+                        if (FrameGUI.frameGUIInstance.isEmpty()) return true;
+                        FrameGUI.frameGUIInstance.get().toGameOver("White wins by checkmate");
                     }
                     else {
                         System.out.println("Check Black");
                     }
-
                 }
             }
             else {
                 if (cb.getKing(Piece.PlayerColor.White).isInCheck()) {
                     if (cb.getKing(Piece.PlayerColor.White).isCheckmated()) {
                         System.out.println("Checkmate White");
+                        if (FrameGUI.frameGUIInstance.isEmpty()) return true;
+                        FrameGUI.frameGUIInstance.get().toGameOver("Black wins by checkmate");
                     }
                     else {
                         System.out.println("Check White");

@@ -1,19 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChessBoardGUI extends JPanel {
 
-    private final GameGUI gameGUI;
     private final Game game;
     private final Map<Position, BoardSquareGUI> boardSquares;
 
     public ChessBoardGUI(Game game, GameGUI gameGUI) {
         this.game = game;
-        this.gameGUI = gameGUI;
         boardSquares = new HashMap<>();
         setSize(800, 800);
         char[][] boardState = game.getChessBoard().getBoardStateCharArray();

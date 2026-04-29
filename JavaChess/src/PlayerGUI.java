@@ -4,15 +4,17 @@ import java.awt.*;
 public class PlayerGUI extends JPanel {
 
     private final Game game;
+    private final GameGUI gameGUI;
     private JLabel playerLabel;
     private JButton resignButton;
-    private JButton offerDrawButton;
+    private JButton drawButton;
 
-    public PlayerGUI(Game game) {
+    public PlayerGUI(Game game, GameGUI gameGUI) {
         this.game = game;
+        this.gameGUI = gameGUI;
         createPlayerLabel(game);
-        createResignButton(game);
-        createOfferDrawButton(game);
+        createResignButton();
+        createDrawButton();
 
         setLayout(new BorderLayout());
 
@@ -21,7 +23,15 @@ public class PlayerGUI extends JPanel {
 
         add(playerLabel, BorderLayout.CENTER);
         add(resignButton, BorderLayout.EAST);
-        add(offerDrawButton, BorderLayout.WEST);
+        add(drawButton, BorderLayout.WEST);
+    }
+
+    public JButton getResignButton() {
+        return resignButton;
+    }
+
+    public JButton getDrawButton() {
+        return drawButton;
     }
 
     public void UpdateInfo() {
@@ -36,15 +46,17 @@ public class PlayerGUI extends JPanel {
         playerLabel.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
-    private void createResignButton(Game game) {
+    private void createResignButton() {
         resignButton = new JButton("Resign");
         resignButton.setBackground(Color.LIGHT_GRAY);
         resignButton.setFont(new Font(Font.SERIF, Font.BOLD, 30));
+        resignButton.addActionListener(gameGUI);
     }
 
-    private void createOfferDrawButton(Game game) {
-        offerDrawButton = new JButton("Offer Draw");
-        offerDrawButton.setBackground(Color.LIGHT_GRAY);
-        offerDrawButton.setFont(new Font(Font.SERIF, Font.BOLD, 30));
+    private void createDrawButton() {
+        drawButton = new JButton("Declare Draw");
+        drawButton.setBackground(Color.LIGHT_GRAY);
+        drawButton.setFont(new Font(Font.SERIF, Font.BOLD, 30));
+        drawButton.addActionListener(gameGUI);
     }
 }

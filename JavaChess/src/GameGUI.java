@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GameGUI implements ActionListener {
+public class GameGUI extends JPanel implements ActionListener {
 
     private final Game game;
     private Piece selectedPiece = null;
@@ -12,19 +12,12 @@ public class GameGUI implements ActionListener {
 
     public GameGUI(Game game) {
         this.game = game;
-        JFrame frame = new JFrame();
 
-        JPanel guiPanel = new JPanel();
-        guiPanel.setLayout(new BorderLayout());
-        playerGUI = new PlayerGUI(game);
+        setLayout(new BorderLayout());
+        playerGUI = new PlayerGUI(game, this);
         chessBoardGUI = new ChessBoardGUI(game, this);
-        guiPanel.add(playerGUI, BorderLayout.NORTH);
-        guiPanel.add(chessBoardGUI, BorderLayout.CENTER);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,900);
-        frame.add(guiPanel);
-        frame.setVisible(true);
+        add(playerGUI, BorderLayout.NORTH);
+        add(chessBoardGUI, BorderLayout.CENTER);
     }
 
     public void UpdateGUI() {
@@ -59,6 +52,19 @@ public class GameGUI implements ActionListener {
                     chessBoardGUI.UpdateLayoutWithSelection(selectedPiece);
                 }
             }
+        }
+        else if (e.getSource().equals(playerGUI.getResignButton())) {
+            if (FrameGUI.frameGUIInstance.isEmpty()) return;
+            if (game.getCurrentPlayer() == Piece.PlayerColor.White) {
+                FrameGUI.frameGUIInstance.get().toGameOver("Black wins by resignation");
+            }
+            else {
+                FrameGUI.frameGUIInstance.get().toGameOver("White wins by resignation");
+            }
+        }
+        else if (e.getSource().equals(playerGUI.getDrawButton())) {
+            if (FrameGUI.frameGUIInstance.isEmpty()) return;
+            FrameGUI.frameGUIInstance.get().toGameOver("Draw declared");
         }
     }
 }
