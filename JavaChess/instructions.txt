@@ -1,5 +1,8 @@
 Run the Main class to play
 
+Github link:
+https://github.com/Aptheriault2005/C212-SP26-Final-JavaChess
+
 Features:
 - Includes chess pieces with move and capture rules
 - Checkmate, resign, and draw game states
