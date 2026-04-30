@@ -1,0 +1,4 @@
+=== GAME 1 ===
+1. Pawn at e2 moves to e4
+2. Pawn at e7 moves to e5
+Draw declared

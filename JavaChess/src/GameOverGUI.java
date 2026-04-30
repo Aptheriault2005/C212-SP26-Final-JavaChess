@@ -22,6 +22,10 @@ public class GameOverGUI extends JPanel implements ActionListener {
         add(mainMenuButton);
     }
 
+    /**
+     * Parses user input to return to main menu GUI
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(mainMenuButton)) {

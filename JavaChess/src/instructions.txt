@@ -1,0 +1,14 @@
+Run the Main class to play
+
+Features:
+- Includes chess pieces with move and capture rules
+- Checkmate, resign, and draw game states
+- Shows possible moves when a piece is selected
+- Prevents illegal moves from being played
+- Includes basic pawn promotion (only can promote to Queen)
+- Includes GUI to play the game on
+- Writes game results to file
+
+To reset game file output:
+- Delete all GameN.txt files
+- Set value in GamesPlayed.txt to 0

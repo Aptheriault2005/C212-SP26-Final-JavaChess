@@ -34,11 +34,18 @@ public class PlayerGUI extends JPanel {
         return drawButton;
     }
 
+    /**
+     * Sets player label to current player
+     */
     public void UpdateInfo() {
         playerLabel.setText(game.getCurrentPlayer().toString() + "'s move");
         playerLabel.setForeground(game.getCurrentPlayer() == Piece.PlayerColor.White ? Color.WHITE : Color.BLACK);
     }
 
+    /**
+     * Creates player label for given game
+     * @param game givn game
+     */
     private void createPlayerLabel(Game game) {
         playerLabel = new JLabel(game.getCurrentPlayer().toString() + "'s move");
         playerLabel.setFont(new Font(Font.SERIF, Font.BOLD, 50));
@@ -46,6 +53,9 @@ public class PlayerGUI extends JPanel {
         playerLabel.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
+    /**
+     * Sets resign button
+     */
     private void createResignButton() {
         resignButton = new JButton("Resign");
         resignButton.setBackground(Color.LIGHT_GRAY);
@@ -53,6 +63,9 @@ public class PlayerGUI extends JPanel {
         resignButton.addActionListener(gameGUI);
     }
 
+    /**
+     * Sets draw button
+     */
     private void createDrawButton() {
         drawButton = new JButton("Declare Draw");
         drawButton.setBackground(Color.LIGHT_GRAY);

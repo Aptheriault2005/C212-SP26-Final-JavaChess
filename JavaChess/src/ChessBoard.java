@@ -53,15 +53,9 @@ public class ChessBoard {
         this(false);
     }
 
-    public void updatePieces(Piece.PlayerColor player, Piece excluded) {
-        final List<Piece> finalPieceList = List.copyOf(pieceList);
-        for (Piece p : finalPieceList) {
-            if (p.getPlayerColor() == player && p != excluded) {
-                p.update();
-            }
-        }
-    }
-
+    /**
+     * Updates all pieces on the board
+     */
     public void updatePieces() {
         if (whiteKing != null) {
             whiteKing.isInCheck();
@@ -83,12 +77,20 @@ public class ChessBoard {
         }
     }
 
+    /**
+     * Set all pieces tryToValidate boolean
+     * @param active boolean value
+     */
     private void setPiecesTryToValidate(boolean active) {
         for (Piece p : pieceList) {
             p.setTryToValidate(active);
         }
     }
 
+    /**
+     * Adds a new piece to the board
+     * @param piece given piece
+     */
     public void addNewPiece(Piece piece) {
         pieceMap.put(piece.getPosition(), piece);
         pieceList.add(piece);
@@ -102,11 +104,20 @@ public class ChessBoard {
         }
     }
 
+    /**
+     * Removes a given piece from the board and the list of pieces
+     * @param piece given piece
+     */
     public void capturePiece(Piece piece) {
         removePieceFromBoard(piece);
         pieceList.remove(piece);
     }
 
+    /**
+     * Forces a piece to move to a position without checking if the piece can legally move there
+     * @param piece given piece
+     * @param pos given position
+     */
     public void forceMovePiece(Piece piece, Position pos) {
         Position start = piece.getPosition();
         pieceMap.put(piece.getPosition(), null);
@@ -119,6 +130,12 @@ public class ChessBoard {
         updatePieces();
     }
 
+    /**
+     * Moves a given piece to a given position
+     * @param piece given piece
+     * @param pos given position
+     * @return true if piece successfully moved to pos, otherwise false
+     */
     public boolean movePiece(Piece piece, Position pos) {
         if (piece.isValidCapture(pos)) {
             Position start = piece.getPosition();
@@ -144,10 +161,20 @@ public class ChessBoard {
         return false;
     }
 
+    /**
+     * Removes a piece from the board but not the list of pieces
+     * @param piece given piece
+     */
     public void removePieceFromBoard(Piece piece) {
         pieceMap.put(piece.getPosition(), null);
     }
 
+    /**
+     * Validates a move by checking if the move would result in being checked
+     * @param piece given piece
+     * @param move given position
+     * @return true if move is legal, otherwise false
+     */
     public boolean validateMove(Piece piece, Position move) {
         validationBoard = copy();
         validationBoard.setPiecesTryToValidate(false);
@@ -158,6 +185,11 @@ public class ChessBoard {
         return true;
     }
 
+    /**
+     * Gets the King of given player
+     * @param player given player color
+     * @return king of player
+     */
     public King getKing(Piece.PlayerColor player) {
         if (player == Piece.PlayerColor.White) {
             return whiteKing;
@@ -167,10 +199,19 @@ public class ChessBoard {
         }
     }
 
+    /**
+     * Gets pieceList
+     * @return pieceList
+     */
     public List<Piece> getPieceList() {
         return pieceList;
     }
 
+    /**
+     * Gets the piece at a given position
+     * @param position given position
+     * @return piece at position, otherwise null
+     */
     public Piece getPieceAt(Position position) {
         if (pieceMap.containsKey(position)) {
             return pieceMap.get(position);
@@ -178,6 +219,10 @@ public class ChessBoard {
         return null;
     }
 
+    /**
+     * Copies this chessboard and all of it's pieces
+     * @return copy of this chessboard
+     */
     public ChessBoard copy() {
         validationBoard = new ChessBoard(false);
         for (Piece p : pieceList) {
@@ -188,10 +233,19 @@ public class ChessBoard {
         return validationBoard;
     }
 
+    /**
+     * Determines if the given position is present on this board
+     * @param position given position
+     * @return true if the given position is present on this board, otherwise false
+     */
     public boolean isValidPosition(Position position) {
         return pieceMap.containsKey(position);
     }
 
+    /**
+     * Creates a char[][] representation of this board state
+     * @return char[][] representation of this board state
+     */
     public char[][] getBoardStateCharArray() {
         char[][] boardState = new char[8][8];
         for (int i = ROWS - 1; i >= 0; i--) {
@@ -208,6 +262,11 @@ public class ChessBoard {
         return boardState;
     }
 
+    /**
+     * Creates a char[][] representation of this board state with moves for a given piece
+     * @param piece given piece
+     * @return char[][] representation of this board state with moves for a given piece
+     */
     public char[][] getPieceMovesCharArray(Piece piece) {
         char[][] boardState = new char[8][8];
         for (int i = ROWS - 1; i >= 0; i--) {
@@ -232,6 +291,9 @@ public class ChessBoard {
         return boardState;
     }
 
+    /**
+     * Prints the board to console
+     */
     public void printBoard() {
         char[][] boardState = getBoardStateCharArray();
         for (int i = boardState.length - 1; i >= 0; i--) {
@@ -250,6 +312,10 @@ public class ChessBoard {
         System.out.println();
     }
 
+    /**
+     * Prints the board to console with given piece moves
+     * @param piece given piece
+     */
     public void printPieceMoves(Piece piece) {
         char[][] boardState = getPieceMovesCharArray(piece);
         for (int i = boardState.length - 1; i >= 0; i--) {

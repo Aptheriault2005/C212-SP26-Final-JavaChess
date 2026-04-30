@@ -24,6 +24,10 @@ public class ChessBoardGUI extends JPanel {
         }
     }
 
+    /**
+     * Updates board square GUI with given piece selection
+     * @param selection given piece
+     */
     public void UpdateLayoutWithSelection(Piece selection) {
         char[][] boardState = game.getChessBoard().getPieceMovesCharArray(selection);
         for (int i = 7; i >= 0; i--) {
@@ -34,6 +38,9 @@ public class ChessBoardGUI extends JPanel {
         }
     }
 
+    /**
+     * Updates board square GUI
+     */
     public void UpdateLayout() {
         char[][] boardState = game.getChessBoard().getBoardStateCharArray();
         for (int i = 7; i >= 0; i--) {

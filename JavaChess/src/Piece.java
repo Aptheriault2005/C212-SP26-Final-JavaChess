@@ -20,6 +20,11 @@ public abstract class Piece {
         setCaptures(new HashSet<>());
     }
 
+    /**
+     * Adds all moves and captures in a line repeating until piece found
+     * @param rankOffset given rank offset
+     * @param fileOffset given file offset
+     */
     protected void addMovesAndCapturesInLine(int rankOffset, int fileOffset) {
         Position acc = position.getAdjacent(rankOffset, fileOffset);
         while (cb.isValidPosition(acc)) {
@@ -36,6 +41,11 @@ public abstract class Piece {
         }
     }
 
+    /**
+     * Adds moves and captures at a given offset
+     * @param rankOffset given rank offset
+     * @param fileOffset given file offset
+     */
     protected void addMovesAndCapturesAtOffset(int rankOffset, int fileOffset) {
         Position pos = position.getAdjacent(rankOffset, fileOffset);
         if (cb.isValidPosition(pos)) {
@@ -50,14 +60,10 @@ public abstract class Piece {
         }
     }
 
-    protected ChessBoard getCb() {
-        return cb;
-    }
 
-    public PlayerColor getPlayerColor() {
-        return playerColor;
-    }
-
+    /**
+     * Validates all moves and captures
+     */
     protected void validateMoves() {
         HashSet<Position> validMoves = new HashSet<>();
         HashSet<Position> validCaptures = new HashSet<>();
@@ -75,8 +81,18 @@ public abstract class Piece {
         setCaptures(validCaptures);
     }
 
-    public void onMove(Position start, Position end) {
+    public abstract void update();
 
+    public abstract Piece copy(ChessBoard newBoard);
+
+    public void onMove(Position start, Position end) {}
+
+    protected ChessBoard getCb() {
+        return cb;
+    }
+
+    public PlayerColor getPlayerColor() {
+        return playerColor;
     }
 
     public boolean getTryToValidate() {
@@ -98,10 +114,6 @@ public abstract class Piece {
     public char getChar() {
         return '?';
     }
-
-    public abstract void update();
-
-    public abstract Piece copy(ChessBoard newBoard);
 
     public HashSet<Position> getMoves() {
         return moves;

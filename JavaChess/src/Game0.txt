@@ -1,0 +1,20 @@
+=== GAME 0 ===
+1. Pawn at e2 moves to e4
+2. Pawn at e7 moves to e5
+3. Pawn at f2 moves to f4
+4. Pawn at d7 moves to d5
+5. Bishop at f1 moves to e2
+6. Knight at b8 moves to c6
+7. Pawn at g2 moves to g4
+8. Queen at d8 moves to h4 resulting in check
+9. King at e1 moves to f1
+10. Queen at h4 captures on g4
+11. Pawn at f4 captures on e5
+12. Queen at g4 captures on e4
+13. Knight at g1 moves to h3
+14. Queen at e4 captures on e2 resulting in check
+15. King at f1 moves to g1
+16. Bishop at c8 captures on h3
+17. Knight at b1 moves to c3
+18. Queen at e2 moves to g2 resulting in checkmate
+Black wins by checkmate

@@ -10,7 +10,6 @@ public class Game {
     private GameGUI gameGUI;
     private final ChessBoard cb;
     private int turn = 0;
-    private boolean recordsToFile;
     private int gameNumber;
     private String currentRecordPath;
     private final List<String> gameRecord;
@@ -21,7 +20,6 @@ public class Game {
         cb = new ChessBoard(true);
         gameRecord = new ArrayList<>();
         lastPieceCount = cb.getPieceList().size();
-        this.recordsToFile = recordsToFile;
         if (recordsToFile) {
             readAndSetGameNumber();
             currentRecordPath = GAME_RECORD_PATH + gameNumber + ".txt";
@@ -35,6 +33,14 @@ public class Game {
         }
     }
 
+    public List<String> getGameRecord() {
+        return gameRecord;
+    }
+
+    /**
+     * Gets the current player
+     * @return current player
+     */
     public Piece.PlayerColor getCurrentPlayer() {
         if (turn % 2 == 0) {
             return Piece.PlayerColor.White;
@@ -44,6 +50,11 @@ public class Game {
         }
     }
 
+    /**
+     * Gets piece at given position if it belongs to the current player
+     * @param pos given position
+     * @return piece at given position if it belongs to the current player, otherwise null
+     */
     public Piece selectValidPieceAt(Position pos) {
         Piece piece = cb.getPieceAt(pos);
         if (piece == null || piece.getPlayerColor() != getCurrentPlayer()) return null;
@@ -54,8 +65,13 @@ public class Game {
         return cb;
     }
 
+    /**
+     * Makes a move, updates GUI, and writes to file if checkmate
+     * @param pieceToMove given piece
+     * @param targetPosition given position
+     * @return true if valid move, otherwise false
+     */
     public boolean makeMove(Piece pieceToMove, Position targetPosition) {
-        boolean isCheckmateMove = false;
         lastPieceCount = cb.getPieceList().size();
         Position startPos = pieceToMove.getPosition();
         if (pieceToMove != null && pieceToMove.getPlayerColor() == getCurrentPlayer() && cb.movePiece(pieceToMove, targetPosition)) {
@@ -82,9 +98,11 @@ public class Game {
                 if (cb.getKing(Piece.PlayerColor.Black).isInCheck()) {
                     if (cb.getKing(Piece.PlayerColor.Black).isCheckmated()) {
                         moveRecord.append(" resulting in checkmate");
-                        isCheckmateMove = true;
                         if (FrameGUI.frameGUIInstance.isPresent()) {
                             FrameGUI.frameGUIInstance.get().toGameOver("White wins by checkmate");
+                            gameRecord.add(moveRecord.toString());
+                            gameRecord.add("White wins by checkmate");
+                            writeGameRecord();
                         }
                     }
                     else {
@@ -96,9 +114,11 @@ public class Game {
                 if (cb.getKing(Piece.PlayerColor.White).isInCheck()) {
                     if (cb.getKing(Piece.PlayerColor.White).isCheckmated()) {
                         moveRecord.append(" resulting in checkmate");
-                        isCheckmateMove = true;
                         if (FrameGUI.frameGUIInstance.isPresent()) {
                             FrameGUI.frameGUIInstance.get().toGameOver("Black wins by checkmate");
+                            gameRecord.add(moveRecord.toString());
+                            gameRecord.add("Black wins by checkmate");
+                            writeGameRecord();
                         }
                     }
                     else {
@@ -107,9 +127,6 @@ public class Game {
                 }
             }
             gameRecord.add(moveRecord.toString());
-            if (recordsToFile && isCheckmateMove) {
-                writeGameRecord();
-            }
             System.out.println(moveRecord);
             turn++;
             return true;
@@ -121,7 +138,10 @@ public class Game {
         return gameGUI;
     }
 
-    private void writeGameRecord() {
+    /**
+     * Writes the game record to a file
+     */
+    public void writeGameRecord() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(currentRecordPath))) {
             for (String s : gameRecord) {
                 bw.write(s + "\n");
@@ -132,6 +152,9 @@ public class Game {
         }
     }
 
+    /**
+     * Sets the current game number by reading the GamesPlayed.txt file, then increments the file value it by 1
+     */
     private void readAndSetGameNumber() {
         List<String> lines = readFileLines(GAMES_PLAYED_PATH);
         gameNumber = Integer.parseInt(lines.getFirst());
@@ -143,6 +166,11 @@ public class Game {
         }
     }
 
+    /**
+     * Reads all lines of a file
+     * @param path given file path
+     * @return List of Strings representing the read lines from the path
+     */
     private static List<String> readFileLines(String path) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {

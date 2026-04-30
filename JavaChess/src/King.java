@@ -14,11 +14,19 @@ public class King extends Piece {
         piecesCheckingKing = new ArrayList<>();
     }
 
+    /**
+     * Gets the char representation of this
+     * @return char representation of this
+     */
     @Override
     public char getChar() {
         return 'K';
     }
 
+    /**
+     * Sets moves and captures then validates them if trying to validate
+     * also determines if this piece can castle
+     */
     @Override
     public void update() {
         this.setMoves(new HashSet<>());
@@ -33,52 +41,18 @@ public class King extends Piece {
         addMovesAndCapturesAtOffset(0,1);
 
         determineCastleAvailability();
-        if (canCastleKingSide) {
-            if (getPlayerColor() == PlayerColor.White) {
-                getMoves().add(Position.at(0,6));
-            }
-            else {
-                getMoves().add(Position.at(7,6));
-            }
-        }
-        if (canCastleQueenSide) {
-            if (getPlayerColor() == PlayerColor.White) {
-                getMoves().add(Position.at(0,2));
-            }
-            else {
-                getMoves().add(Position.at(7,2));
-            }
-        }
 
         if (!getTryToValidate()) return;
         validateMoves();
 
-        if (canCastleKingSide) {
-            if (getPlayerColor() == PlayerColor.White) {
-                if (getMoves().contains(Position.at(0,6)) && !getMoves().contains(Position.at(0,5))) {
-                    getMoves().remove(Position.at(0,6));
-                }
-            }
-            else {
-                if (getMoves().contains(Position.at(7,6)) && !getMoves().contains(Position.at(7,5))) {
-                    getMoves().remove(Position.at(7,6));
-                }
-            }
-        }
-        if (canCastleQueenSide) {
-            if (getPlayerColor() == PlayerColor.White) {
-                if (getMoves().contains(Position.at(0,2)) && !getMoves().contains(Position.at(0,3))) {
-                    getMoves().remove(Position.at(0,2));
-                }
-            }
-            else {
-                if (getMoves().contains(Position.at(7,2)) && !getMoves().contains(Position.at(7,3))) {
-                    getMoves().remove(Position.at(7,2));
-                }
-            }
-        }
+        removeCastleIfCastlesThroughCheck();
     }
 
+    /**
+     * Creates a copy of this piece to a given board
+     * @param newBoard given board
+     * @return copy of this piece
+     */
     @Override
     public Piece copy(ChessBoard newBoard) {
         King copied = new King(getPosition(), newBoard, getPlayerColor());
@@ -86,6 +60,12 @@ public class King extends Piece {
         return copied;
     }
 
+    /**
+     * Called after this piece moves from start position to end position before it is updated on the ChessBoard
+     * If the move made is a castling move, moves the corresponding rook to position
+     * @param start given start position
+     * @param end given end position
+     */
     @Override
     public void onMove(Position start, Position end) {
         firstMove = false;
@@ -112,14 +92,67 @@ public class King extends Piece {
 
     }
 
-    public void determineCastleAvailability() {
+    /**
+     * Removes castle option if it results in castling through a check
+     */
+    private void removeCastleIfCastlesThroughCheck() {
+        if (canCastleKingSide) {
+            if (getPlayerColor() == PlayerColor.White) {
+                if (getMoves().contains(Position.at(0,6)) && !getMoves().contains(Position.at(0,5))) {
+                    getMoves().remove(Position.at(0,6));
+                }
+            }
+            else {
+                if (getMoves().contains(Position.at(7,6)) && !getMoves().contains(Position.at(7,5))) {
+                    getMoves().remove(Position.at(7,6));
+                }
+            }
+        }
+        if (canCastleQueenSide) {
+            if (getPlayerColor() == PlayerColor.White) {
+                if (getMoves().contains(Position.at(0,2)) && !getMoves().contains(Position.at(0,3))) {
+                    getMoves().remove(Position.at(0,2));
+                }
+            }
+            else {
+                if (getMoves().contains(Position.at(7,2)) && !getMoves().contains(Position.at(7,3))) {
+                    getMoves().remove(Position.at(7,2));
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds kingside and queenside castle moves if legal
+     */
+    private void determineCastleAvailability() {
         canCastleKingSide = false;
         canCastleQueenSide = false;
         if (!firstMove) return;
         determineKingsideCastle();
         determineQueensideCastle();
+
+        if (canCastleKingSide) {
+            if (getPlayerColor() == PlayerColor.White) {
+                getMoves().add(Position.at(0,6));
+            }
+            else {
+                getMoves().add(Position.at(7,6));
+            }
+        }
+        if (canCastleQueenSide) {
+            if (getPlayerColor() == PlayerColor.White) {
+                getMoves().add(Position.at(0,2));
+            }
+            else {
+                getMoves().add(Position.at(7,2));
+            }
+        }
     }
 
+    /**
+     * Determines if this King can kingside castle
+     */
     private void determineKingsideCastle() {
         if (getPlayerColor() == PlayerColor.White) {
             if (!(getCb().getPieceAt(Position.at(0,7)) instanceof Rook)) return;
@@ -135,6 +168,9 @@ public class King extends Piece {
         }
     }
 
+    /**
+     * Determines if this King can queenside castle
+     */
     private void determineQueensideCastle() {
         if (getPlayerColor() == PlayerColor.White) {
             if (!(getCb().getPieceAt(Position.at(0,0)) instanceof Rook)) return;
@@ -154,6 +190,10 @@ public class King extends Piece {
         }
     }
 
+    /**
+     * Determines if this King is currently checkmated
+     * @return true if checkmated, otherwise false
+     */
     public boolean isCheckmated() {
         if (!isInCheck() || !getMoves().isEmpty() || !getCaptures().isEmpty()) {
             return false;
@@ -170,6 +210,10 @@ public class King extends Piece {
         return true;
     }
 
+    /**
+     * Determines if this King is currently in check
+     * @return true if in check, otherwise false
+     */
     public boolean isInCheck() {
         piecesCheckingKing.clear();
 
@@ -181,9 +225,5 @@ public class King extends Piece {
             }
         }
         return !piecesCheckingKing.isEmpty();
-    }
-
-    public List<Piece> getPiecesCheckingKing() {
-        return piecesCheckingKing;
     }
 }

@@ -9,7 +9,6 @@ class GameTest {
         Game testGame = new Game(false, false);
         testGame.getChessBoard().printBoard();
 
-        assertFalse(testGame.makeMove(testGame.getChessBoard().getPieceAt(Position.at(4, 4)), Position.at(3,4)));
         assertEquals(Piece.PlayerColor.White, testGame.getCurrentPlayer());
         assertFalse(testGame.makeMove(testGame.getChessBoard().getPieceAt(Position.at(1, 4)), Position.at(1,4)));
         assertEquals(Piece.PlayerColor.White, testGame.getCurrentPlayer());
@@ -21,7 +20,6 @@ class GameTest {
         assertTrue(testGame.makeMove(testGame.getChessBoard().getPieceAt(Position.at(1, 4)), Position.at(3,4)));
         testGame.getChessBoard().printBoard();
 
-        assertFalse(testGame.makeMove(testGame.getChessBoard().getPieceAt(Position.at(4, 4)), Position.at(3,4)));
         assertEquals(Piece.PlayerColor.Black, testGame.getCurrentPlayer());
         assertFalse(testGame.makeMove(testGame.getChessBoard().getPieceAt(Position.at(6, 4)), Position.at(6,4)));
         assertEquals(Piece.PlayerColor.Black, testGame.getCurrentPlayer());

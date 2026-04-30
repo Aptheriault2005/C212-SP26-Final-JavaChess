@@ -1,5 +1,4 @@
 import java.util.HashSet;
-import java.util.Optional;
 
 public class Pawn extends Piece{
 
@@ -13,11 +12,19 @@ public class Pawn extends Piece{
         promotion = new Queen(pos, chessBoard, player);
     }
 
+    /**
+     * Gets the char representation of this
+     * @return char representation of this
+     */
     @Override
     public char getChar() {
         return 'P';
     }
 
+    /**
+     * Sets moves and captures then validates them if trying to validate
+     * also determines if this piece can be captures en pessant
+     */
     @Override
     public void update() {
         if (enPessantTurnOver) {
@@ -36,6 +43,13 @@ public class Pawn extends Piece{
         validateMoves();
     }
 
+    /**
+     * Called after this piece moves from start position to end position before it is updated on the ChessBoard
+     * If the move made is an en pessant move, captures pawn accordingly
+     * If the move made is a promotion, promotes this pawn
+     * @param start given start position
+     * @param end given end position
+     */
     @Override
     public void onMove(Position start, Position end) {
         canBeCapturedEnPessant = false;
@@ -73,6 +87,11 @@ public class Pawn extends Piece{
         }
     }
 
+    /**
+     * Creates a copy of this piece to a given board
+     * @param newBoard given board
+     * @return copy of this piece
+     */
     @Override
     public Piece copy(ChessBoard newBoard) {
         Pawn copied = new Pawn(getPosition(), newBoard, getPlayerColor());
@@ -82,6 +101,10 @@ public class Pawn extends Piece{
         return copied;
     }
 
+    /**
+     * Promotes this pawn to given promotion piece
+     * @param piece given promotion piece
+     */
     public void promote(Piece piece) {
         if (piece instanceof Knight
                 || piece instanceof Bishop
@@ -94,14 +117,21 @@ public class Pawn extends Piece{
             getCb().addNewPiece(piece);
         }
         else {
-            throw new RuntimeException("Invalid type for pawn promotion");
+            throw new RuntimeException("Invalid piece for pawn promotion");
         }
     }
 
+    /**
+     * Sets the promotion of this pawn to given piece
+     * @param piece given piece
+     */
     public void setPromotion(Piece piece) {
         promotion = piece;
     }
 
+    /**
+     * Adds valid pawn moves
+     */
     private void addPawnMoves() {
         HashSet<Position> pawnMoves = new HashSet<>();
         Position move1 = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1,0) : getPosition().getAdjacent(-1,0);
@@ -119,6 +149,9 @@ public class Pawn extends Piece{
         this.setMoves(pawnMoves);
     }
 
+    /**
+     * Adds valid pawn captures
+     */
     private void addPawnCaptures() {
         HashSet<Position> pawnCaptures = new HashSet<>();
         Position pos = (getPlayerColor() == PlayerColor.White) ? getPosition().getAdjacent(1, 1) : getPosition().getAdjacent(-1, 1);
@@ -142,6 +175,10 @@ public class Pawn extends Piece{
         this.setCaptures(pawnCaptures);
     }
 
+    /**
+     * Adds en pessant captures to given pawn captures position hashset
+     * @param pawnCaptures given pawn captures position hashset
+     */
     private void addEnPessantCaptures(HashSet<Position> pawnCaptures) {
         Position captureLeftPos = getPosition().getAdjacent(0,-1);
         Position captureRightPos = getPosition().getAdjacent(0,1);

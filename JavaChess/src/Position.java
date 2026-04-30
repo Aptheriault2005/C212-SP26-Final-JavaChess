@@ -1,54 +1,52 @@
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 
 public class Position {
     private final int rank;
     private final int file;
+    private final static Map<Integer, String> CHESS_NOTATION_FILE_MAP = Map.of(
+            0, "a",
+            1, "b",
+            2, "c",
+            3, "d",
+            4, "e",
+            5, "f",
+            6, "g",
+            7, "h"
+    );
 
     public Position(int rank, int file) {
         this.rank = rank;
         this.file = file;
     }
 
+    /**
+     * Creates a Position at a given rank and file
+     * @param rank given rank
+     * @param file given file
+     * @return
+     */
     public static Position at(int rank, int file) {
         return new Position(rank, file);
     }
 
+    /**
+     * Gets an adjacent Position to this
+     * @param rankOffset rank offset value
+     * @param fileOffset file offset value
+     * @return adjacent Position to this based on offset
+     */
     public Position getAdjacent(int rankOffset, int fileOffset) {
         return new Position(rank + rankOffset, file + fileOffset);
     }
 
+    /**
+     * Gets the chess notation of this
+     * @return chess notation of this
+     */
     public String getChessNotation() {
-        String output;
-        if (file == 0) {
-            output = "a";
-        }
-        else if (file == 1) {
-            output = "b";
-        }
-        else if (file == 2) {
-            output = "c";
-        }
-        else if (file == 3) {
-            output = "d";
-        }
-        else if (file == 4) {
-            output = "e";
-        }
-        else if (file == 5) {
-            output = "f";
-        }
-        else if (file == 6) {
-            output = "g";
-        }
-        else if (file == 7) {
-            output = "h";
-        }
-        else {
-            output = "INVALID FILE";
-        }
-        output += rank + 1;
-        return output;
+        return CHESS_NOTATION_FILE_MAP.get(file) + (rank + 1);
     }
 
     public int getRank() {

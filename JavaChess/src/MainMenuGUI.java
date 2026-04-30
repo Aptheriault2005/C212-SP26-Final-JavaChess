@@ -22,6 +22,10 @@ public class MainMenuGUI extends JPanel implements ActionListener {
         add(newGameButton);
     }
 
+    /**
+     * Parses user input to create a new game
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(newGameButton)) {
