@@ -29,9 +29,4 @@ public class GameOverGUI extends JPanel implements ActionListener {
             FrameGUI.frameGUIInstance.get().toMainMenu();
         }
     }
-
-    public static void main(String[] args) {
-        new FrameGUI();
-        FrameGUI.frameGUIInstance.get().toGameOver("White wins by checkmate");
-    }
 }

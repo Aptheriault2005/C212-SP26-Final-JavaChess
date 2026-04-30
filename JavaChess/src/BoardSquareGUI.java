@@ -40,6 +40,9 @@ public class BoardSquareGUI extends JButton {
         else {
             setForeground(Color.RED);
         }
+        if (text.equals("x")) {
+            setForeground(Color.RED);
+        }
     }
 
     private Color checkerboardColor(int row, int col) {

@@ -6,7 +6,7 @@ class GameTest {
 
     @Test
     void noInvalidMovesMade() {
-        Game testGame = new Game(false);
+        Game testGame = new Game(false, false);
         testGame.getChessBoard().printBoard();
 
         assertFalse(testGame.makeMove(testGame.getChessBoard().getPieceAt(Position.at(4, 4)), Position.at(3,4)));
@@ -36,7 +36,7 @@ class GameTest {
 
     @Test
     void scholarsMateTest() {
-        Game testGame = new Game(false);
+        Game testGame = new Game(false, false);
         testGame.getChessBoard().printBoard();
 
         assertEquals(Piece.PlayerColor.White, testGame.getCurrentPlayer());

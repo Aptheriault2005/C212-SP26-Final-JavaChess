@@ -27,7 +27,7 @@ public class FrameGUI extends JFrame {
     }
 
     public void createNewGame() {
-        Game game = new Game(true);
+        Game game = new Game(true, true);
         GameGUI gameGUI = game.getGameGUI();
         setFramePanel(gameGUI);
     }
