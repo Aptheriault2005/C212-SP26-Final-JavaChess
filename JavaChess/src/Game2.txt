@@ -1,9 +1,0 @@
-=== GAME 2 ===
-1. Pawn at e2 moves to e4
-2. Pawn at d7 moves to d5
-3. Pawn at e4 captures on d5
-4. Queen at d8 captures on d5
-5. Knight at b1 moves to c3
-6. Queen at d5 moves to b5
-7. Knight at c3 captures on b5
-White wins by resignation

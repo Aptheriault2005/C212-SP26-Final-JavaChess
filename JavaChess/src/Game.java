@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Game {
 
-    private static final String GAMES_PLAYED_PATH = "C:/Users/apthe/Game Projects/C212-SP26-Final-JavaChess/JavaChess/src/GamesPlayed.txt";
-    private static final String GAME_RECORD_PATH = "C:/Users/apthe/Game Projects/C212-SP26-Final-JavaChess/JavaChess/src/Game";
+    private static final String GAMES_PLAYED_PATH = "/GamesPlayed.txt";
+    private static final String GAME_RECORD_PATH = "/Game";
 
     private GameGUI gameGUI;
     private final ChessBoard cb;
@@ -22,7 +22,7 @@ public class Game {
         lastPieceCount = cb.getPieceList().size();
         if (recordsToFile) {
             readAndSetGameNumber();
-            currentRecordPath = GAME_RECORD_PATH + gameNumber + ".txt";
+            currentRecordPath = Main.SOURCE_PATH + GAME_RECORD_PATH + gameNumber + ".txt";
             gameRecord.add("=== GAME " + gameNumber + " ===");
         }
         if (hasGUI) {
@@ -156,9 +156,10 @@ public class Game {
      * Sets the current game number by reading the GamesPlayed.txt file, then increments the file value it by 1
      */
     private void readAndSetGameNumber() {
-        List<String> lines = readFileLines(GAMES_PLAYED_PATH);
+        String path = Main.SOURCE_PATH + GAMES_PLAYED_PATH;
+        List<String> lines = readFileLines(path);
         gameNumber = Integer.parseInt(lines.getFirst());
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(GAMES_PLAYED_PATH))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
             bw.write("" + (gameNumber + 1));
         }
         catch (IOException ex) {

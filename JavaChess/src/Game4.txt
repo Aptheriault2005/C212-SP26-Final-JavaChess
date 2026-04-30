@@ -1,7 +1,0 @@
-=== GAME 4 ===
-1. Pawn at e2 moves to e4
-2. Pawn at f7 moves to f6
-3. Knight at b1 moves to c3
-4. Pawn at g7 moves to g5
-5. Queen at d1 moves to h5 resulting in checkmate
-White wins by checkmate

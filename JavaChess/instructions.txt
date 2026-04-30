@@ -1,3 +1,4 @@
+Set SOURCE_PATH in Main to absolute path of the src folder
 Run the Main class to play
 
 Github link:
